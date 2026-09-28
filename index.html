@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="manifest" href="manifest.json">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#5b4bff">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAD4ElEQVR42u3dy0tUARTAYf+/cNmqEqJZCpIbEVwl7krcJCIiihkhgVFh6kLctI0gCVoJgksZs/YnD0MRkeDjvv0ufDA4cw/M4beYcV5D9+5EQFcMWQKCBkGDoEHQCBoEDYIGQYOgETQIGgQNggZBI2gQNAgaBA2CRtAgaBA0CBoEjaBB0CBoEDQIGkGDoEHQIGgQNIIGQYOgQdAI2iIQNAgaBA2CRtAgaBA0CLrF7g8P2IWgW2m8F7GxGnHwOeLsNP4ceTn/ltflbexK0I02OhKxvxuXPvK2eY7dCbpx5mYifv6IKx95Tp5rh4JujIXZuPGRM+xS0LWbmYzCjpxlp4Ku1dFhcUHnLDsVdG3WFqPwI2faraBrcXxUfNA5024FXbmpsSjtyNl2LOhKrcyXF3TOtmNBV2prs7ygc7YdC7pSe9vlBZ2z7VjQldp5W17QOduOBV2p9aXygs7ZdizoSk1PlBd0zrZjQVeuf1J8zDnTbgVdi81XxQedM+1W0LXo3Y34flpczDkrZ9qtoGsz/7S4oHOWnQq6dq9f3DzmnGGXgm6Ml8vXjznPtUNBN/LN/t++Xj7kvK039Qu68Z49ifi4f/4kr/+fJ379wXV5G7sSdPs+Cf4gYnJ0IC/biaBB0AgaBA2CBkGDoBE0CBoEDYK+prGHEcvPIz68idh5dzvkfc37nPdd0L5yoFPHbflqhM4H/eWTmH8fuQtBt9juOxH/e+ROBN1Cjx+J96IjdyPollldEO5FR+5G0G17uPFeuBc+7HgvaEELWtAecnjIIWhPCj0pFLR/2/m3nRdWvLAiaC99e+lb0N6c5M1JggZBI2hLQNAgaBA0CBpBg6BB0CDo9vKTFIJuPT8aJOhO8LNugu4MP7wp6M7w08iC7gw/Xi/ozujdPX+Sd1pc0DkrZ9qtoGux+ar4j0rlTLsVdC36J8UHnTPtVtCVm54o7wOtOduOBV2p9aXygs7Zdizoznw1wm35ygFBN8jednlB52w7FnSltjbLCzpn27GgK7UyX17QOduOBV2pqbHygs7Zdizoyh0fFR9zzrRbQddibbH4oHOm3Qq6NkeHxcWcs+xU0LW/qb+ow5v9Bd0IC7M3jzln2KWgG2NuJuLnj6uHnOfkuXYo6OZ9wnskYn/38jHnbfMcuxN0o433IjZWIw4+R5z99QGAvJx/y+vyNnYl6Fa6PzxgF4IGQSNoEDQIGgQNgkbQIGgQNAgaBI2gQdAgaBA0CBpBg6BB0CBoEDSCBkGDoEHQIGgEDYIGQYOgQdAIGgQNggZBI2iLQNAgaBA0CBpBg6BB0CBoEDSCBkFDM/wCceBzvgb6SvUAAAAASUVORK5CYII=">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="资料分析速算">
+<title>资料分析速算 · 本地离线</title>
+<style>
+:root{
+  --bg:#eef1f8; --card:#ffffff; --line:#e7eaf4; --line2:#f1f3fa;
+  --tx:#171a26; --tx2:#5b6276; --tx3:#939ab0;
+  --brand:#5b4bff; --brand2:#8b5cf6; --brand3:#a855f7;
+  --ok:#0fae6e; --ok-bg:#e8f8f1;
+  --bad:#ef4444; --bad-bg:#fdecec;
+  --amber:#f59e0b;
+  --r:18px;
+  --sd:0 2px 6px rgba(23,26,38,.05), 0 12px 26px -14px rgba(23,26,38,.18);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
+  font-variant-numeric:tabular-nums;
+}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer;}
+#app{max-width:560px;margin:0 auto;min-height:100vh;min-height:100dvh;background:var(--bg);position:relative;}
+.screen{display:none;}
+.screen.on{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;animation:fade .26s cubic-bezier(.22,.8,.3,1);}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ================= 首页 ================= */
+.hero{
+  position:relative;overflow:hidden;color:#fff;
+  background:linear-gradient(135deg,#5b4bff 0%,#7c5cf6 48%,#a855f7 100%);
+  padding:calc(26px + env(safe-area-inset-top)) 22px 72px;
+  border-radius:0 0 30px 30px;
+}
+.hero .blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.13);}
+.hero .b1{width:230px;height:230px;right:-70px;top:-90px;}
+.hero .b2{width:150px;height:150px;right:56px;bottom:-88px;background:rgba(255,255,255,.09);}
+.hero .b3{width:70px;height:70px;left:-24px;bottom:6px;background:rgba(255,255,255,.10);}
+.hero h1{margin:0;font-size:25px;letter-spacing:.4px;position:relative;}
+.hero .tag{margin-top:7px;font-size:12.5px;opacity:.86;position:relative;letter-spacing:.2px;}
+.hstats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:20px;position:relative;}
+.hstat{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:10px 8px;text-align:center;backdrop-filter:blur(6px);}
+.hstat b{display:block;font-size:19px;letter-spacing:-.3px;}
+.hstat span{font-size:10.5px;opacity:.85;}
+
+.mods{padding:0 16px;margin-top:-46px;display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:2;}
+.mod{background:var(--card);border-radius:var(--r);padding:15px 14px 13px;box-shadow:var(--sd);border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:9px;transition:transform .16s ease, box-shadow .16s ease;position:relative;overflow:hidden;text-align:left;}
+.mod:active{transform:scale(.972);box-shadow:0 2px 8px rgba(23,26,38,.08);}
+.mod .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-weight:800;font-size:17px;letter-spacing:-.5px;box-shadow:0 6px 14px -6px currentColor;}
+.mod .ic span{color:#fff;}
+.mod .nm{font-size:14.5px;font-weight:700;letter-spacing:-.2px;line-height:1.25;}
+.mod .ds{font-size:11.5px;color:var(--tx3);margin-top:-4px;}
+.mod .st{font-size:10.5px;color:var(--tx2);background:#f4f6fc;border-radius:9px;padding:4px 8px;align-self:flex-start;}
+.mod.wide{grid-column:span 2;flex-direction:row;align-items:center;gap:13px;}
+.mod.wide .txt{flex:1;display:flex;flex-direction:column;gap:6px;}
+.mod .arw{color:#c6cbdd;font-size:17px;}
+
+.foot{padding:20px 18px calc(30px + env(safe-area-inset-bottom));margin-top:auto;}
+.foot .row{display:flex;gap:9px;flex-wrap:wrap;}
+.gbtn{flex:1;min-width:100px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 10px;font-size:12.5px;color:var(--tx2);
+  display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s;}
+.gbtn:active{transform:scale(.97);}
+.gbtn.wide{flex:0 0 100%;}
+.gbtn.danger{color:#d9534f;border-color:#f6dcdc;}
+.warn{margin:0 18px 12px;background:#fff8e6;border:1px solid #f7e2b0;color:#8a6412;border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.6;}
+.tiny{text-align:center;font-size:11px;color:var(--tx3);margin-top:14px;line-height:1.7;}
+
+/* ================= 设置 ================= */
+.topbar{display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top)) 16px 12px;}
+.iconb{width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;
+  font-size:16px;color:var(--tx2);box-shadow:0 2px 6px rgba(23,26,38,.04);flex:0 0 auto;transition:.15s;}
+.iconb:active{transform:scale(.93);}
+.topbar .ttl{font-size:16px;font-weight:700;letter-spacing:-.2px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.setwrap{padding:4px 16px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;flex:1;}
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--sd);padding:16px 15px;}
+.card .lb{font-size:12.5px;font-weight:700;color:var(--tx2);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+.card .lb i{width:4px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--brand),var(--brand3));display:block;}
+.seg{display:flex;flex-wrap:wrap;gap:8px;}
+.seg button{padding:9px 14px;border-radius:11px;background:#f4f6fc;border:1.5px solid transparent;font-size:13px;color:var(--tx2);
+  transition:.15s;font-weight:600;}
+.seg button.on{background:linear-gradient(135deg,#eee9ff,#f5efff);border-color:#c4b5fd;color:var(--brand);box-shadow:0 2px 10px -4px rgba(91,75,255,.5);}
+.seg button:active{transform:scale(.95);}
+.setdesc{font-size:11.5px;color:var(--tx3);margin-top:10px;line-height:1.6;}
+.setdesc b{color:var(--tx2);}
+.startb{margin-top:auto;padding-top:14px;}
+.bigbtn{width:100%;padding:17px;border-radius:16px;color:#fff;font-size:16px;font-weight:700;letter-spacing:1px;
+  background:linear-gradient(135deg,var(--brand),var(--brand3));box-shadow:0 10px 24px -10px rgba(91,75,255,.85);transition:.16s;}
+.bigbtn:active{transform:scale(.98);filter:brightness(.95);}
+.modehint{text-align:center;font-size:11.5px;color:var(--tx3);margin-top:9px;}
+
+/* ================= 做题 ================= */
+#s-practice{height:100vh;height:100dvh;overflow:hidden;background:#fff;}
+.pbar{height:4px;background:#eef0f8;flex:0 0 auto;}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand3));transition:width .3s cubic-bezier(.4,0,.2,1);border-radius:0 3px 3px 0;}
+.ptop{display:flex;align-items:center;gap:10px;padding:10px 14px 8px;flex:0 0 auto;}
+.ptop .mid{flex:1;text-align:center;min-width:0;}
+.ptop .cnt{font-size:12px;color:var(--tx3);font-weight:600;}
+.ptop .tm{font-size:17px;font-weight:700;letter-spacing:.5px;margin-top:1px;}
+.ptop .tm.warn{color:#e5484d;}
+.endb{padding:7px 13px;border-radius:11px;background:#fdecec;color:#d9534f;font-size:12.5px;font-weight:700;border:1px solid #f8d7d7;}
+
+.qwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 20px;min-height:0;}
+.qcard{width:100%;max-width:460px;text-align:center;}
+.qtag{display:inline-block;font-size:11px;font-weight:700;color:var(--brand);background:#f0edff;border-radius:20px;padding:4px 12px;margin-bottom:16px;letter-spacing:.3px;}
+.qtext{font-size:44px;font-weight:700;letter-spacing:1px;line-height:1.25;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2px;color:var(--tx);}
+.qtext .op{color:var(--brand);margin:0 8px;font-weight:600;}
+.qtext .eq{color:#c9cee0;margin:0 4px 0 10px;font-weight:600;}
+.qtext sup{font-size:.55em;font-weight:800;margin-left:1px;position:relative;top:-.45em;}
+.qhint{margin-top:12px;font-size:12px;color:var(--tx3);}
+/* 材料卡（两步运算） */
+.qmat{width:100%;max-width:340px;margin:0 auto;background:#f7f8fd;border:1px solid #eaeef8;border-radius:16px;
+  padding:4px 16px 12px;text-align:left;}
+.qmat .mrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px solid #eaedf6;}
+.qmat .mrow:last-of-type{border-bottom:0;}
+.qmat .mrow span{font-size:13px;color:var(--tx3);flex:0 0 auto;}
+.qmat .mrow b{font-size:20px;font-weight:700;letter-spacing:.3px;}
+.qmat .mask{margin-top:4px;padding-top:12px;border-top:1.5px solid #dee3f2;font-size:15.5px;font-weight:800;
+  color:var(--brand);text-align:center;letter-spacing:.8px;}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;margin:0 6px;font-size:.82em;}
+.frac i{font-style:normal;padding:0 8px 3px;}
+.frac b{font-weight:700;padding:3px 8px 0;border-top:3px solid currentColor;}
+
+.ansbox{margin-top:26px;min-height:62px;width:100%;max-width:340px;border-radius:16px;background:#f6f8fd;border:2px solid #e7eaf4;
+  display:flex;align-items:center;justify-content:center;padding:8px 16px;transition:.18s;}
+.ansbox.ok{background:var(--ok-bg);border-color:#9fe3c4;}
+.ansbox.bad{background:var(--bad-bg);border-color:#f8bcbc;}
+.ansbox.shake{animation:shk .3s;}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.ansval{font-size:34px;font-weight:700;letter-spacing:1px;color:var(--tx);word-break:break-all;text-align:center;line-height:1.1;}
+.ansval.ph{color:#c3c9dc;font-size:22px;font-weight:600;letter-spacing:.5px;}
+.caret{display:inline-block;width:2.5px;height:30px;background:var(--brand);margin-left:3px;border-radius:2px;animation:bl 1.05s steps(1) infinite;vertical-align:middle;}
+@keyframes bl{0%,50%{opacity:1}51%,100%{opacity:0}}
+
+.fbslot{width:100%;max-width:340px;min-height:104px;margin-top:14px;flex:0 0 auto;display:flex;align-items:flex-start;justify-content:center;}
+.fb{opacity:0;transform:translateY(-8px);transition:.18s cubic-bezier(.3,1.4,.5,1);border-radius:16px;padding:11px 20px;
+  text-align:center;pointer-events:none;max-width:100%;}
+.fb.show{opacity:1;transform:none;}
+.fb.good{background:#e8f8f1;border:1.5px solid #9fe3c4;color:#0a8f5a;}
+.fb.bad{background:#fdecec;border:1.5px solid #f8bcbc;color:#cf3b3b;}
+.fb .big{font-size:19px;font-weight:800;letter-spacing:.4px;white-space:nowrap;}
+.fb .sm{font-size:12px;margin-top:4px;opacity:.85;}
+/* 错题时给出"口算路径"：这是两步运算模块的教学核心。
+   公式左对齐 —— 居中的多行算式很难顺着读下来。 */
+.fb .path{margin-top:7px;padding-top:7px;border-top:1px dashed rgba(207,59,59,.3);font-size:12px;
+  font-weight:600;letter-spacing:.2px;line-height:1.45;color:#a83232;text-align:left;}
+
+.pad{flex:0 0 auto;padding:8px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #f0f2f9;}
+.padgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.key{height:56px;border-radius:14px;background:#f5f7fc;font-size:23px;font-weight:600;color:var(--tx);
+  display:grid;place-items:center;transition:.09s;border:1px solid #eef1f8;user-select:none;}
+.key:active{background:#e8ecf8;transform:scale(.96);}
+.key.fn{background:#eef1fa;font-size:19px;color:var(--tx2);}
+.key.okk{grid-column:span 3;height:54px;background:linear-gradient(135deg,var(--brand),var(--brand3));color:#fff;font-size:17px;font-weight:700;
+  letter-spacing:3px;box-shadow:0 8px 20px -10px rgba(91,75,255,.9);border:0;}
+.key.okk:active{filter:brightness(.94);transform:scale(.98);}
+
+/* 闪卡模式：键盘整块换成「揭晓 / 记住了 / 没记住」 */
+.fpad{display:flex;flex-direction:column;gap:10px;}
+.fbtn{height:56px;border-radius:14px;border:1px solid #eef1f8;background:#f5f7fc;font-size:17px;font-weight:700;
+  color:var(--tx);letter-spacing:1.5px;transition:.09s;}
+.fbtn:active{background:#e8ecf8;transform:scale(.98);}
+.fbtn.reveal{background:linear-gradient(135deg,var(--brand),var(--brand3));color:#fff;border:0;
+  box-shadow:0 8px 20px -10px rgba(91,75,255,.9);letter-spacing:3px;}
+.fbtn.yes{background:#e8f8f1;border-color:#9fe3c4;color:#0a8f5a;}
+.fbtn.no{background:#fdecec;border-color:#f8bcbc;color:#cf3b3b;}
+.fbtnrow{display:flex;gap:10px;}
+.fbtnrow .fbtn{flex:1;}
+
+/* 首数法 / 比重首位题里的百分号 */
+.qtext .pctsign{font-size:.6em;color:#939ab0;margin-left:3px;font-weight:600;}
+
+/* ================= 结果 ================= */
+.reswrap{padding:0 16px calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;}
+.rcard{background:var(--card);border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--sd);padding:18px 16px;}
+.rtop{display:flex;align-items:center;gap:16px;}
+.ringwrap{position:relative;width:112px;height:112px;flex:0 0 auto;}
+.ringwrap svg{transform:rotate(-90deg);}
+.ringtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ringtxt b{font-size:26px;font-weight:800;letter-spacing:-.5px;}
+.ringtxt span{font-size:10.5px;color:var(--tx3);margin-top:1px;}
+.rmeta{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0;}
+.mt{background:#f7f8fd;border-radius:12px;padding:8px 9px;min-width:0;}
+.mt span{font-size:10px;color:var(--tx3);display:block;white-space:nowrap;}
+.mt b{font-size:15px;font-weight:700;letter-spacing:-.2px;}
+.mt b i{font-size:10.5px;font-weight:600;font-style:normal;color:var(--tx3);margin-left:1px;}
+.minrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.minrow>div{background:#f7f8fd;border-radius:11px;padding:7px 6px;text-align:center;min-width:0;}
+.minrow span{font-size:10px;color:var(--tx3);display:block;}
+.minrow b{font-size:13.5px;font-weight:700;}
+.cmp{display:flex;align-items:center;gap:7px;font-size:12.5px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);flex-wrap:wrap;}
+.pill{border-radius:8px;padding:3px 9px;font-size:11.5px;font-weight:700;}
+.pill.up{background:#fdecec;color:#d9534f;}
+.pill.dn{background:#e8f8f1;color:#0a8f5a;}
+.pill.eq{background:#f2f4fa;color:var(--tx2);}
+.sect{font-size:13px;font-weight:700;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.sect i{width:4px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--brand),var(--brand3));display:block;}
+.sect em{font-style:normal;font-size:11px;color:var(--tx3);font-weight:500;margin-left:auto;}
+.chartbox{width:100%;}
+.chartbox svg{width:100%;height:auto;display:block;}
+.empty{text-align:center;color:var(--tx3);font-size:12.5px;padding:26px 0;}
+.wrongitem{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2);font-size:13px;}
+.wrongitem:last-child{border-bottom:0;}
+.wrongitem .qq{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.wrongitem .uu{color:var(--bad);text-decoration:line-through;font-size:12.5px;}
+.wrongitem .ar{color:#c6cbdd;font-size:12px;flex:0 0 auto;}
+.wrongitem .aa{color:var(--ok);font-weight:700;}
+.wrongitem .tt{font-size:10.5px;color:var(--tx3);flex:0 0 auto;}
+.redo{width:100%;padding:13px;border-radius:14px;background:#fff5f5;border:1px solid #f8d7d7;color:#d9534f;
+  font-weight:700;font-size:14px;margin-top:12px;transition:.15s;}
+.redo:active{transform:scale(.98);}
+.resbtns{display:flex;gap:10px;margin-top:2px;}
+.resbtns button{flex:1;padding:15px;border-radius:15px;font-size:14.5px;font-weight:700;transition:.15s;}
+.resbtns .p1{background:linear-gradient(135deg,var(--brand),var(--brand3));color:#fff;box-shadow:0 10px 22px -12px rgba(91,75,255,.9);}
+.resbtns .p2{background:#fff;border:1px solid var(--line);color:var(--tx2);}
+.resbtns button:active{transform:scale(.97);}
+
+/* ================= 速查表 ================= */
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 9px;}
+.tgrid.c3{grid-template-columns:repeat(3,1fr);gap:6px;}
+.tcell{display:flex;justify-content:space-between;align-items:baseline;gap:5px;padding:6px 8px;background:#f7f8fd;border-radius:9px;min-width:0;}
+.tk{font-size:11.5px;color:var(--tx2);font-weight:600;white-space:nowrap;}
+.tv{font-size:12.5px;font-weight:700;color:var(--tx);letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tnote{font-size:11.5px;color:var(--tx3);line-height:1.6;margin-bottom:12px;}
+/* 公式卡（速查表 · 公式页） */
+.fml{display:flex;flex-direction:column;gap:9px;}
+.fmlrow{background:#f7f8fd;border:1px solid #eaeef8;border-radius:13px;padding:11px 13px;}
+.fmlrow .t{font-size:13.5px;font-weight:800;color:var(--brand);letter-spacing:.3px;}
+.fmlrow .f{font-size:13px;color:var(--tx);margin-top:6px;line-height:1.55;}
+.fmlrow .f b{color:#0a8f5a;font-weight:800;}
+.fmlrow .e{font-size:12px;color:var(--tx3);margin-top:6px;line-height:1.5;}
+.fmlrow .e b{color:var(--tx2);font-weight:700;}
+.fmlrow.warn{background:#fff8ec;border-color:#f6e3bf;}
+.fmlrow.warn .t{color:#b7791f;}
+.fmlrow.warn .f{color:#8a6420;}
+.fmlrow.warn .f b{color:#8a6420;}
+
+/* 矮屏手机（如 667px 的 iPhone SE）：把顶栏 / 键盘 / 材料卡一起压一压，
+   给"错题口算路径"腾出空间。不压的话反馈层会被 overflow:hidden 裁掉。 */
+@media (max-height:720px){
+  .ptop{padding:6px 14px 6px;}
+  .iconb{width:34px;height:34px;font-size:16px;}
+  .qtag{margin-bottom:10px;padding:3px 11px;font-size:10.5px;}
+  .qtext{font-size:34px;}
+  .qmat{padding:2px 14px 10px;}
+  .qmat .mrow{padding:7px 0;}
+  .qmat .mrow span{font-size:12px;}
+  .qmat .mrow b{font-size:17px;}
+  .qmat .mask{font-size:13.5px;padding-top:9px;}
+  .qhint{margin-top:8px;font-size:11px;}
+  .ansbox{margin-top:10px;min-height:54px;padding:6px 14px;}
+  .ansval{font-size:28px;}
+  .ansval.ph{font-size:19px;}
+  .fbslot{min-height:86px;margin-top:8px;}
+  .fb{padding:8px 14px;border-radius:14px;}
+  .fb .big{font-size:16px;}
+  .fb .sm{font-size:11px;margin-top:3px;}
+  .fb .path{font-size:11px;margin-top:6px;padding-top:6px;}
+  .pad{padding:6px 12px calc(8px + env(safe-area-inset-bottom));}
+  .padgrid{gap:6px;}
+  .key{height:42px;font-size:19px;border-radius:11px;}
+  .key.fn{font-size:16px;}
+  .key.okk{height:46px;font-size:15px;letter-spacing:2px;}
+  .fbtn{height:46px;font-size:15px;}
+  .fpad{gap:8px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ 首页 ============ -->
+  <section class="screen on" id="s-home">
+    <div class="hero">
+      <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+      <h1>资料分析速算</h1>
+      <div class="tag">本地离线 · 数据只存本机 · 无广告无账号</div>
+      <div class="hstats">
+        <div class="hstat"><b id="hToday">0</b><span>今日题数</span></div>
+        <div class="hstat"><b id="hAll">0</b><span>累计题数</span></div>
+        <div class="hstat"><b id="hAcc">—</b><span>总正确率</span></div>
+      </div>
+    </div>
+    <div class="mods" id="mods"></div>
+    <div class="foot">
+      <div class="warn" id="storeWarn" style="display:none">当前浏览器禁止了本地存储，练习记录无法保存。用手机浏览器打开或把文件放到本机服务器上即可正常记录。</div>
+      <div class="row" style="margin-bottom:9px">
+        <button class="gbtn wide" id="btnTable">📋 速查表 · 百化分 / 平方 / 立方 / 公式</button>
+      </div>
+      <div class="row">
+        <button class="gbtn" id="btnSound">🔊 声音反馈</button>
+        <button class="gbtn" id="btnExport">⬆ 导出记录</button>
+        <button class="gbtn" id="btnImport">⬇ 导入记录</button>
+      </div>
+      <div class="row" style="margin-top:9px">
+        <button class="gbtn danger" id="btnClear">清空全部记录</button>
+      </div>
+      <div class="tiny">长按页面 → 「添加到主屏幕」，即可像 App 一样全屏打开<br>建议关闭浏览器省电模式以获得准确计时</div>
+    </div>
+  </section>
+
+  <!-- ============ 设置 ============ -->
+  <section class="screen" id="s-setup">
+    <div class="topbar">
+      <button class="iconb" id="btnBack">←</button>
+      <div class="ttl" id="setTitle">设置</div>
+    </div>
+    <div class="setwrap" id="setBody"></div>
+  </section>
+
+  <!-- ============ 做题 ============ -->
+  <section class="screen" id="s-practice">
+    <div class="pbar"><i id="pbarFill"></i></div>
+    <div class="ptop">
+      <button class="iconb" id="btnQuit">✕</button>
+      <div class="mid">
+        <div class="cnt" id="pCount">1 / 10</div>
+        <div class="tm" id="pTime">00:00</div>
+      </div>
+      <button class="endb" id="btnEnd" style="visibility:hidden">结束</button>
+    </div>
+    <div class="qwrap">
+      <div class="qcard">
+        <div class="qtag" id="qTag">计算</div>
+        <div class="qtext" id="qText">—</div>
+        <div class="qhint" id="qHint"></div>
+      </div>
+      <div class="ansbox" id="ansBox">
+        <div class="ansval ph" id="ansVal">请输入答案</div>
+      </div>
+      <div class="fbslot"><div class="fb" id="fb"></div></div>
+    </div>
+    <div class="pad">
+      <div class="padgrid" id="padGrid"></div>
+      <div class="fpad" id="padFlash" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- ============ 结果 ============ -->
+  <section class="screen" id="s-result">
+    <div class="topbar">
+      <button class="iconb" id="btnResHome">←</button>
+      <div class="ttl" id="resTitle">练习结果</div>
+    </div>
+    <div class="reswrap" id="resBody"></div>
+  </section>
+
+  <!-- ============ 速查表 ============ -->
+  <section class="screen" id="s-table">
+    <div class="topbar">
+      <button class="iconb" id="btnTblBack">←</button>
+      <div class="ttl">速查表</div>
+    </div>
+    <div class="reswrap">
+      <div class="seg" id="tblTabs">
+        <button data-v="bai" class="on">百化分</button>
+        <button data-v="sq">平方数</button>
+        <button data-v="cube">立方数</button>
+        <button data-v="fml">公式</button>
+      </div>
+      <div class="card" id="tblBody"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   0. 基础工具
+   ============================================================ */
+var $ = function(s){ return document.querySelector(s); };
+var rnd = function(a,b){ return a + Math.floor(Math.random()*(b-a+1)); };
+var pick = function(a){ return a[Math.floor(Math.random()*a.length)]; };
+function pad2(n){ return (n<10?'0':'')+n; }
+function fmtClock(ms){
+  var s = Math.floor(Math.max(0,ms)/1000), m = Math.floor(s/60);
+  return pad2(m)+':'+pad2(s%60);
+}
+function fmtSec(ms, d){
+  d = d==null?2:d;
+  return (ms/1000).toFixed(d);
+}
+/* 保留 n 位有效数字 */
+function fmtSig(v, n){
+  if(v === 0) return '0';
+  return String(Number(v.toPrecision(n)));
+}
+/* 相对误差。
+   兼容"把比值写成百分数"（0.578 写成 57.8）—— 但只在正确答案本身就是小于 1 的
+   比值时启用（百化分 1/n、比重、三位数÷三位数的商）。像"增长量 = 57"这种量值，
+   写成 5700 不该算对，所以 v ≥ 1 时直接按普通相对误差判。 */
+function relErr(u, v){
+  if(Math.abs(v) < 1e-12) return Math.abs(u) < 1e-12 ? 0 : Infinity;
+  var e1 = Math.abs(u - v) / Math.abs(v);
+  if(Math.abs(v) >= 1) return e1;
+  var e2 = Math.abs(u/100 - v) / Math.abs(v);
+  return Math.min(e1, e2);
+}
+
+/* ============================================================
+   1. 存储层（localStorage 不可用时自动降级为内存）
+   ============================================================ */
+var STORAGE_OK = true;
+try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); }catch(e){ STORAGE_OK = false; }
+
+var LS_KEY = 'ssxl_v2';
+var MEM = null;
+function db(){
+  if(MEM) return MEM;
+  var raw = null;
+  try{ raw = localStorage.getItem(LS_KEY); }catch(e){ raw = null; }
+  try{ MEM = raw ? JSON.parse(raw) : null; }catch(e){ MEM = null; }
+  if(!MEM || typeof MEM !== 'object') MEM = {};
+  if(!Array.isArray(MEM.sessions)) MEM.sessions = [];
+  if(!MEM.opts || typeof MEM.opts !== 'object') MEM.opts = {};
+  var c = MEM.count;
+  if(c !== 'inf' && c !== 't60' && c !== 't120' && typeof c !== 'number') MEM.count = 10;
+  if(typeof MEM.sound !== 'boolean') MEM.sound = true;
+  if(typeof MEM.tol !== 'number') MEM.tol = 3;
+  return MEM;
+}
+function saveDB(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(db())); }catch(e){}
+}
+function tolFrac(){ return db().tol / 100; }
+
+/* ============================================================
+   2. 题型定义
+   ============================================================ */
+var MODULES = [
+  { id:'div32', name:'三位数 ÷ 两位数', desc:'如 456 ÷ 23', glyph:'÷', hue:'#5b4bff', tol:true, opts:[] },
+  { id:'div33', name:'三位数 ÷ 三位数', desc:'如 876 ÷ 234', glyph:'÷', hue:'#0ea5e9', tol:true, opts:[] },
+  { id:'lead', name:'首数法', desc:'只求首位 / 前两位', glyph:'≈', hue:'#f97316', tol:false,
+    opts:[
+      {key:'mode',label:'求什么',def:'d1',items:[
+        {v:'d1',t:'商的首位'},{v:'d2',t:'商的前两位'},{v:'pct',t:'比重首位'},{v:'mix',t:'混合'}]},
+      {key:'size',label:'数值量级',def:'s1',items:[
+        {v:'s1',t:'四位数 ÷ 三位数'},{v:'s2',t:'五位数 ÷ 三位数'},{v:'mix',t:'混合'}]}
+    ]},
+  { id:'bai', name:'百化分', desc:'1/n 与小数互化', glyph:'%', hue:'#f59e0b', tol:true,
+    opts:[
+      {key:'mode',label:'练习方向',def:'fwd',items:[
+        {v:'fwd',t:'1/n → 小数'},{v:'rev',t:'小数 → 1/n'},{v:'mix',t:'混合'}]},
+      {key:'rng',label:'分母范围',def:'mid',items:[
+        {v:'mid',t:'1.5 ~ 20'},{v:'all',t:'表全量 40 项'},{v:'half',t:'1.5 ~ 20.5'},{v:'int',t:'1 ~ 20'}]}
+    ]},
+  { id:'flash', name:'百化分闪卡', desc:'看题 → 回忆 → 揭晓', glyph:'⚡', hue:'#d946ef', tol:false,
+    opts:[
+      {key:'mode',label:'卡片方向',def:'fwd',items:[
+        {v:'fwd',t:'1/n → 小数'},{v:'rev',t:'小数 → 1/n'},{v:'mix',t:'混合'}]},
+      {key:'rng',label:'分母范围',def:'mid',items:[
+        {v:'mid',t:'1.5 ~ 20'},{v:'all',t:'表全量 40 项'},{v:'half',t:'1.5 ~ 20.5'},{v:'int',t:'1 ~ 20'}]}
+    ]},
+  { id:'sq', name:'平方数', desc:'如 23² = 529', glyph:'x²', hue:'#0fae6e',
+    opts:[{key:'rng',label:'底数范围',def:'11-30',items:[
+      {v:'11-20',t:'11 ~ 20'},{v:'11-30',t:'11 ~ 30'},{v:'1-30',t:'1 ~ 30（表全量）'}]}] },
+  { id:'cube', name:'立方数', desc:'如 12³ = 1728', glyph:'x³', hue:'#ec4899',
+    opts:[{key:'rng',label:'底数范围',def:'2-15',items:[
+      {v:'2-10',t:'2 ~ 10'},{v:'2-15',t:'2 ~ 15'},{v:'2-20',t:'2 ~ 20'},{v:'1-30',t:'1 ~ 30（表全量）'}]}] },
+  { id:'two', name:'两步运算', desc:'增长率 / 比重 综合', glyph:'⇒', hue:'#14b8a6', tol:true,
+    opts:[
+      {key:'mode',label:'题型',def:'gainA',items:[
+        {v:'gainA',t:'增长量·知现期'},{v:'gainB',t:'增长量·知基期'},{v:'base',t:'基期量'},{v:'share',t:'比重'},{v:'mix',t:'混合'}]},
+      {key:'den',label:'增长率取值',def:'int',items:[
+        {v:'int',t:'整数分母（口算友好）'},{v:'half',t:'1/2.5、1/3.5…'},{v:'mid',t:'1.5 ~ 20 全量'}]},
+      {key:'size',label:'数值量级',def:'3',items:[
+        {v:'3',t:'三位数'},{v:'4',t:'四位数'}]}
+    ]},
+  { id:'mixed', name:'综合练习', desc:'七种题型随机混合', glyph:'∑', hue:'#8b5cf6', tol:true, opts:[] }
+];
+function getMod(id){
+  for(var i=0;i<MODULES.length;i++){ if(MODULES[i].id===id) return MODULES[i]; }
+  return null;
+}
+function defaultOpts(mod){
+  var o = {};
+  (mod.opts||[]).forEach(function(g){ o[g.key] = g.def; });
+  return o;
+}
+function currentOpts(mod){
+  var saved = db().opts[mod.id] || {};
+  var o = defaultOpts(mod);
+  (mod.opts||[]).forEach(function(g){ if(saved[g.key]!=null) o[g.key] = saved[g.key]; });
+  return o;
+}
+function persistOpt(mod, key, val){
+  if(!db().opts[mod.id]) db().opts[mod.id] = {};
+  db().opts[mod.id][key] = val;
+  saveDB();
+}
+
+/* ============================================================
+   3. 出题引擎
+   ============================================================ */
+
+/* ---- 3.1 除法：任意三位数 ÷ 两位数 / 三位数，不要求整除 ---- */
+function genDiv(kind){
+  var bLo = kind==='32' ? 11 : 101;
+  var bHi = kind==='32' ? 99 : 999;
+  var a = rnd(100, 999);
+  var b = rnd(bLo, bHi);
+  // 避开 240÷40 这种一眼就能约掉的
+  if(a % 10 === 0 && b % 10 === 0) b += 1;
+  var v = a / b;
+  return {
+    key: 'D'+a+'/'+b,
+    plain: a+' ÷ '+b+' =',
+    tag: '除法',
+    tol: true,
+    html: '<span>'+a+'</span><span class="op">÷</span><span>'+b+'</span><span class="eq">=</span>',
+    ansVal: v,
+    ansText: fmtSig(v, 4),
+    check: function(u){ return relErr(u, v) <= tolFrac(); }
+  };
+}
+
+/* ---- 3.2 平方 / 立方：精确判分 ---- */
+function genPow(kind, opt){
+  var p = opt.rng.split('-');
+  var lo = parseInt(p[0],10), hi = parseInt(p[1],10);
+  var n = rnd(lo, hi);
+  var pw = kind === 'sq' ? 2 : 3;
+  var v = Math.pow(n, pw);
+  return {
+    key: (kind==='sq'?'S':'C')+n,
+    plain: n + (pw===2?'²':'³') + ' =',
+    tag: kind==='sq' ? '平方' : '立方',
+    tol: false,
+    html: '<span>'+n+'</span><sup>'+(pw===2?'2':'3')+'</sup><span class="eq">=</span>',
+    ansVal: v,
+    ansText: String(v),
+    check: function(u){ return Math.abs(u - v) < 1e-6; }
+  };
+}
+
+/* ---- 3.3 百化分：分母池 = 表上的那些 ---- */
+function baiPool(rng){
+  var a = [], i;
+  if(rng === 'int'){ for(i=1;i<=20;i++) a.push(i); return a; }
+  if(rng === 'half'){ for(i=1.5;i<=20.5;i+=1) a.push(i); return a; }
+  if(rng === 'mid'){ for(i=1.5;i<=20.001;i+=0.5) a.push(i); return a; }
+  for(i=1;i<=20;i++) a.push(i);
+  for(i=1.5;i<=20.5;i+=1) a.push(i);
+  return a;
+}
+/* 小数 → 1/n 的唯一性表：3 位有效数字的百分数能否唯一确定分母 */
+var BAI_UNIQ = null;
+function baiUniqueSet(){
+  if(BAI_UNIQ) return BAI_UNIQ;
+  var cnt = {}, pool = baiPool('all'), n, s, i;
+  for(i=0;i<pool.length;i++){
+    s = String(Number((100/pool[i]).toPrecision(3)));
+    cnt[s] = (cnt[s]||0) + 1;
+  }
+  var set = {};
+  for(i=0;i<pool.length;i++){
+    n = pool[i];
+    s = String(Number((100/n).toPrecision(3)));
+    if(cnt[s] === 1) set[n] = 1;
+  }
+  BAI_UNIQ = set;
+  return set;
+}
+/* 表里那个值：保留 6 位小数后去掉多余的 0 */
+function baiText(n){ return String(Number((1/n).toFixed(6))); }
+
+function genBai(opt){
+  var pool = baiPool(opt.rng);
+  var uniq = baiUniqueSet();
+  for(var t=0; t<300; t++){
+    var n = pick(pool);
+    var dir = opt.mode === 'mix' ? (Math.random()<0.5 ? 'fwd' : 'rev') : opt.mode;
+    var v = 1/n;
+    if(dir === 'fwd'){
+      return {
+        key:'BF'+n,
+        plain:'1/'+n+' ≈',
+        tag:'百化分',
+        tol:true,
+        html:'<span class="frac"><i>1</i><b>'+n+'</b></span><span class="eq">≈</span>',
+        ansVal: v,
+        ansText: baiText(n),
+        back: baiText(n),                       // 闪卡背面
+        check: function(u){ return relErr(u, v) <= tolFrac(); }
+      };
+    } else {
+      if(!uniq[n]) continue;
+      var pct = Number((100/n).toPrecision(3));
+      return {
+        key:'BR'+n,
+        plain: pct+'% = 1/?',
+        tag:'百化分',
+        tol:false,
+        html:'<span>'+pct+'%</span><span class="eq">=</span><span class="frac"><i>1</i><b>?</b></span>',
+        hint:'填入分母',
+        ansVal: n,
+        ansText: String(n),
+        back: '1/'+n,                           // 闪卡背面
+        check: function(u){ return Math.abs(u - n) < 1e-6; }
+      };
+    }
+  }
+  return null;
+}
+
+/* ---- 3.4 两步运算：增长率 / 比重的复合应用 ----
+   核心：增长量 = 现期 × r/(1+r)，当 r = 1/n 时恰好等于 现期 ÷ (n+1)
+   所以「认表 + 一次除法」就能口算 —— 这正是百化分表的用途。 */
+function fmtN(x){ return String(Number(x.toFixed(2))); }
+function pctStr(n){ return Number((100/n).toPrecision(3)) + '%'; }
+
+/* 增长率分母池。整数分母 → n+1 也是整数，除法最顺；带 0.5 的分母（1/2.5、
+   1/3.5…）是真题里 40%、28.6%、22.2% 的来源，但 n+1 会变成 3.5、4.5，
+   口算难度明显上升，所以默认只出整数分母。 */
+function twoPool(den){
+  if(den === 'mid') return baiPool('mid');
+  if(den === 'half') return baiPool('half');
+  var a = [], i;
+  for(i=2;i<=20;i++) a.push(i);
+  return a;
+}
+
+function genTwo(opt){
+  var lo = opt.size === '4' ? 1000 : 100;
+  var hi = opt.size === '4' ? 9999 : 999;
+  var mode = opt.mode === 'mix' ? pick(['gainA','gainB','base','share']) : opt.mode;
+
+  /* --- 比重：部分 ÷ 整体，答案写成百分数 --- */
+  if(mode === 'share'){
+    var a = rnd(lo, hi), b = rnd(lo, hi);
+    if(a > b){ var t = a; a = b; b = t; }
+    if(a === b) b = Math.min(hi, b + 1);
+    var v = a / b;
+    var ps = fmtSig(v*100, 3) + '%';
+    return {
+      key: 'TS' + a + '/' + b,
+      plain: '部分 ' + a + ' · 整体 ' + b + ' → 比重',
+      tag: '比重',
+      tol: true,
+      mat: [['部分', String(a)], ['整体', String(b)]],
+      ask: '求 比重',
+      hint: '写成百分数，如 21.7',
+      explain: a + ' ÷ ' + b + ' ≈ ' + ps,
+      ansVal: v,
+      ansText: ps,
+      check: function(u){ return relErr(u, v) <= tolFrac(); }
+    };
+  }
+
+  /* --- 增长率类：r = 1/n --- */
+  var n = pick(twoPool(opt.den || 'int'));
+  var A = rnd(lo, hi);
+  var pct = pctStr(n);
+  var n1 = n + 1;
+  var v2, mat, ask, tag, explain;
+
+  if(mode === 'gainA'){
+    // 增长量 = 现期 ÷ (n+1)
+    v2 = A / n1;
+    mat = [['现期量', String(A)], ['同比增长', '+' + pct]];
+    ask = '求 增长量';
+    tag = '增长量';
+    explain = pct + ' ≈ 1/' + fmtN(n) + '，增长量 = ' + A + ' ÷ ' + fmtN(n1);
+  } else if(mode === 'gainB'){
+    // 增长量 = 基期 ÷ n
+    v2 = A / n;
+    mat = [['基期量', String(A)], ['同比增长', '+' + pct]];
+    ask = '求 增长量';
+    tag = '增长量';
+    explain = pct + ' ≈ 1/' + fmtN(n) + '，增长量 = ' + A + ' ÷ ' + fmtN(n);
+  } else {
+    // 基期量 = 现期 − 增长量 = 现期 × n/(n+1)
+    v2 = A * n / n1;
+    mat = [['现期量', String(A)], ['同比增长', '+' + pct]];
+    ask = '求 基期量';
+    tag = '基期量';
+    explain = pct + ' ≈ 1/' + fmtN(n) + '，增长量 = ' + A + ' ÷ ' + fmtN(n1) + ' ≈ ' + fmtSig(A/n1, 3) +
+              '，基期 = ' + A + ' − ' + fmtSig(A/n1, 3);
+  }
+
+  return {
+    key: 'T' + mode + A + '/' + n,
+    plain: mat[0][0] + ' ' + A + ' · +' + pct + ' → ' + (mode === 'base' ? '基期量' : '增长量'),
+    tag: tag,
+    tol: true,
+    mat: mat,
+    ask: ask,
+    explain: explain,
+    ansVal: v2,
+    ansText: fmtSig(v2, 4),
+    check: function(u){ return relErr(u, v2) <= tolFrac(); }
+  };
+}
+
+/* ---- 3.5 首数法：只求首位 / 前两位 ----
+   资料分析里排除选项靠的往往不是精确值，而是"商的首位是几"。
+   练的是「取前两位做估算」的反射，所以判分是精确的整数，没有容差。
+   量级：s1 = 四位数 ÷ 三位数（商 1~99），s2 = 五位数 ÷ 三位数（商 10~999）。
+   s2 下商是三位数，前两位才真的是"三位里取两位"。 */
+function genLead(opt){
+  var mode = opt.mode === 'mix' ? pick(['d1','d2','pct']) : opt.mode;
+  var lvl  = opt.size === 'mix' ? pick(['s1','s2']) : opt.size;
+  var need2 = (mode === 'd2');
+
+  /* --- 比重首位：部分 < 整体，百分数限定 10%~90%，首位才没有歧义 --- */
+  if(mode === 'pct'){
+    var b = rnd(1000, 99999);
+    var lo = Math.ceil(b * 0.10), hi = Math.floor(b * 0.90);
+    if(hi < lo) return genLead(opt);
+    var a = rnd(lo, hi);
+    var p = a / b * 100;
+    var kp = Math.floor(p / 10);
+    return {
+      key: 'LP' + a + '/' + b,
+      plain: a + ' ÷ ' + b + ' → 比重首位',
+      tag: '比重首位',
+      tol: false,
+      hint: '填百分数的第一位数字（21.7% 就填 2）',
+      html: '<span>' + a + '</span><span class="op">÷</span><span>' + b + '</span>' +
+            '<span class="eq">≈</span><span>?</span><span class="pctsign">%</span>',
+      explain: a + ' ÷ ' + b + ' = ' + fmtSig(p, 3) + '%，首位是 ' + kp,
+      ansVal: kp,
+      ansText: String(kp),
+      check: function(u){ return Math.abs(u - kp) < 1e-6; }
+    };
+  }
+
+  /* --- 商的首位 / 前两位：保证 a > b（商 ≥ 1）
+     d1 只要商 ≥ 1；d2 要求商的位数够"取两位"：s1 商取两位数、s2 取三位数 --- */
+  var aLo = lvl === 's2' ? 10000 : 1000;
+  var aHi = lvl === 's2' ? 99999 : 9999;
+  var minQ = need2 ? (lvl === 's2' ? 100 : 10) : 1;
+  var A = 0, B = 0, q = 0, t;
+  for(t = 0; t < 300; t++){
+    B = rnd(100, 999);
+    A = rnd(aLo, aHi);
+    q = Math.floor(A / B);
+    if(q < minQ) continue;
+    break;
+  }
+  if(q < minQ){                            // 兜底：一定能满足条件的组合
+    B = 100;
+    A = rnd(Math.max(aLo, minQ * B), aHi);
+    q = Math.floor(A / B);
+  }
+
+  var m   = String(q).length - 1;              // 商是 m+1 位数
+  var p10 = Math.pow(10, need2 ? m - 1 : m);
+  var k   = Math.floor(q / p10);               // d1 → 1 位；d2 → 2 位
+  /* 乘数写成 k×10^m 而不是 k —— 否则"496 × 1 = 4960"这种式子对不上账 */
+  var mul = k * p10, mul2 = (k + 1) * p10;
+  var lo3 = B * mul, hi3 = B * mul2;
+  var label = need2 ? '前两位' : '首位';
+
+  return {
+    key: 'L' + mode + A + '/' + B,
+    plain: A + ' ÷ ' + B + ' → ' + label,
+    tag: need2 ? '求前两位' : '求首位',
+    tol: false,
+    hint: need2 ? '填商的两位数字' : '填商的第一位数字',
+    html: '<span>' + A + '</span><span class="op">÷</span><span>' + B + '</span>' +
+          '<span class="eq">≈</span><span>' + (need2 ? '??' : '?') + '</span>',
+    explain: B + ' × ' + mul + ' = ' + lo3 + ' ≤ ' + A + ' < ' + hi3 + ' = ' + B + ' × ' + mul2 +
+             '，' + label + '是 ' + k,
+    ansVal: k,
+    ansText: String(k),
+    check: function(u){ return Math.abs(u - k) < 1e-6; }
+  };
+}
+
+function genOnce(modId, opt){
+  switch(modId){
+    case 'div32': return genDiv('32');
+    case 'div33': return genDiv('33');
+    case 'lead':  return genLead(opt);
+    case 'bai':   return genBai(opt);
+    case 'flash': return genBai(opt);
+    case 'sq':    return genPow('sq', opt);
+    case 'cube':  return genPow('cube', opt);
+    case 'two':   return genTwo(opt);
+    case 'mixed': {
+      var sub = pick(['div32','div33','lead','bai','sq','cube','two']);
+      return genOnce(sub, defaultOpts(getMod(sub)));
+    }
+    default: return null;
+  }
+}
+function optsFor(modId){
+  if(modId === 'mixed') return {};
+  return currentOpts(getMod(modId));
+}
+function genUnique(modId, opt, seen){
+  var q = null;
+  for(var i=0; i<80; i++){
+    var c = genOnce(modId, opt);
+    if(c && !seen[c.key]){ q = c; break; }
+  }
+  if(!q) q = genOnce(modId, opt);
+  if(q) seen[q.key] = 1;
+  return q;
+}
+
+/* ============================================================
+   4. 反馈（音效 / 震动）
+   ============================================================ */
+var actx = null;
+function beep(ok){
+  if(!db().sound) return;
+  try{
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    if(!actx) actx = new AC();
+    if(actx.state === 'suspended') actx.resume();
+    var o = actx.createOscillator(), g = actx.createGain();
+    o.connect(g); g.connect(actx.destination);
+    var now = actx.currentTime;
+    if(ok){
+      o.type = 'sine'; o.frequency.setValueAtTime(760, now);
+      o.frequency.setValueAtTime(1140, now+0.07);
+    } else {
+      o.type = 'triangle'; o.frequency.setValueAtTime(240, now);
+      o.frequency.exponentialRampToValueAtTime(150, now+0.16);
+    }
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(ok?0.10:0.13, now+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, now+(ok?0.19:0.24));
+    o.start(now); o.stop(now+0.3);
+  }catch(e){}
+}
+function buzz(ok){
+  try{ if(navigator.vibrate) navigator.vibrate(ok ? 12 : [0,45,55,45]); }catch(e){}
+}
+
+/* ============================================================
+   5. 屏幕路由
+   ============================================================ */
+var screens = ['s-home','s-setup','s-practice','s-result','s-table'];
+function go(id){
+  screens.forEach(function(s){
+    var el = document.getElementById(s);
+    if(el) el.classList.toggle('on', s === id);
+  });
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   6. 首页
+   ============================================================ */
+function modStats(modId){
+  var list = db().sessions.filter(function(s){ return s.mod === modId; });
+  var q = 0, ok = 0, ms = 0, best = null;
+  list.forEach(function(s){
+    q += s.n; ok += s.ok; ms += s.ms;
+    if(best === null || s.avg < best) best = s.avg;
+  });
+  return { count:list.length, n:q, ok:ok, ms:ms, best:best,
+           acc: q ? ok/q : null, avg: q ? ms/q : null };
+}
+
+function renderHome(){
+  var d = db();
+  var all = d.sessions;
+  var tQ = 0, tOk = 0, todayQ = 0;
+  var t0 = new Date(); t0.setHours(0,0,0,0);
+  all.forEach(function(s){
+    tQ += s.n; tOk += s.ok;
+    if(s.ts >= t0.getTime()) todayQ += s.n;
+  });
+  $('#hToday').textContent = todayQ;
+  $('#hAll').textContent = tQ;
+  $('#hAcc').textContent = tQ ? Math.round(tOk/tQ*100) + '%' : '—';
+  $('#btnSound').textContent = (d.sound ? '🔊' : '🔇') + ' 声音反馈';
+  $('#storeWarn').style.display = STORAGE_OK ? 'none' : 'block';
+
+  var box = $('#mods');
+  box.innerHTML = '';
+  MODULES.forEach(function(m, i){
+    var st = modStats(m.id);
+    var el = document.createElement('button');
+    el.className = 'mod' + (i === MODULES.length-1 ? ' wide' : '');
+    var sub = st.count
+      ? '练 '+st.count+' 次 · 均 ' + fmtSec(st.avg,2) + 's/题 · ' + Math.round(st.acc*100) + '%'
+      : '还没练过';
+    var inner = '<div class="ic" style="background:linear-gradient(135deg,'+m.hue+','+m.hue+'cc);color:'+m.hue+'"><span>'+m.glyph+'</span></div>';
+    if(i === MODULES.length-1){
+      inner += '<div class="txt"><div class="nm">'+m.name+'</div><div class="ds">'+m.desc+'</div><div class="st">'+sub+'</div></div><div class="arw">›</div>';
+    } else {
+      inner += '<div class="nm">'+m.name+'</div><div class="ds">'+m.desc+'</div><div class="st">'+sub+'</div>';
+    }
+    el.innerHTML = inner;
+    el.addEventListener('click', function(){ openSetup(m.id); });
+    box.appendChild(el);
+  });
+}
+
+/* ============================================================
+   7. 设置页
+   ============================================================ */
+var COUNT_ITEMS = [
+  {v:5,t:'5 题'},{v:10,t:'10 题'},{v:20,t:'20 题'},{v:30,t:'30 题'},{v:40,t:'40 题'},{v:50,t:'50 题'},
+  {v:'inf',t:'∞ 无尽'},{v:'t60',t:'⏱ 60 秒'},{v:'t120',t:'⏱ 120 秒'}
+];
+var TOL_ITEMS = [{v:1,t:'1%'},{v:2,t:'2%'},{v:3,t:'3%'},{v:5,t:'5%'}];
+
+function openSetup(modId){
+  var mod = getMod(modId);
+  var opt = currentOpts(mod);
+  var count = db().count;
+
+  $('#setTitle').textContent = mod.name;
+
+  var html = '';
+  html += '<div class="card"><div class="lb"><i></i>练习量</div><div class="seg" id="segCount">';
+  COUNT_ITEMS.forEach(function(it){
+    html += '<button data-v="'+it.v+'" class="'+(String(count)===String(it.v)?'on':'')+'">'+it.t+'</button>';
+  });
+  html += '</div><div class="setdesc">无尽模式题目源源不断；限时挑战在倒计时结束时自动结算。</div></div>';
+
+  if(mod.tol){
+    html += '<div class="card"><div class="lb"><i></i>判分误差</div><div class="seg" id="segTol">';
+    TOL_ITEMS.forEach(function(it){
+      html += '<button data-v="'+it.v+'" class="'+(db().tol===it.v?'on':'')+'">'+it.t+'</button>';
+    });
+    html += '</div><div class="setdesc">答案与正确值的<b>相对误差</b>落在这个范围内就算对。速算建议 3%，' +
+            '大约相当于把结果算到 2 位有效数字。平方 / 立方按精确判分。</div></div>';
+  }
+
+  (mod.opts||[]).forEach(function(g){
+    html += '<div class="card"><div class="lb"><i></i>'+g.label+'</div><div class="seg" data-key="'+g.key+'">';
+    g.items.forEach(function(it){
+      html += '<button data-v="'+it.v+'" class="'+(String(opt[g.key])===String(it.v)?'on':'')+'">'+it.t+'</button>';
+    });
+    html += '</div></div>';
+  });
+
+  if(modId === 'bai'){
+    html += '<div class="card" style="padding:13px 15px"><div class="setdesc" style="margin:0">' +
+      '「1/n → 小数」直接写小数（如 1/7 ≈ 0.143）；「小数 → 1/n」给百分数让你填分母。数值全部取自你那张表。</div></div>';
+  }
+  if(modId === 'two'){
+    html += '<div class="card" style="padding:13px 15px"><div class="setdesc" style="margin:0">' +
+      '题目以材料卡给出（现期量 / 增长率 / 部分 / 整体），你只填最终结果。增长率都取自百化分表，' +
+      '所以两步会塌缩成一次除法：<b>增长量 = 现期 ÷ (n+1)</b>、<b>基期 = 现期 − 现期 ÷ (n+1)</b>。' +
+      '默认只出<b>整数分母</b>（1/2 ~ 1/20），此时 n+1 也是整数，除法口算最顺；' +
+      '切到「1/2.5、1/3.5…」会引入 40%、28.6%、22.2% 这些真题高频值，但除数会变成 3.5、4.5，难度明显上升。' +
+      '答错时会显示口算路径，速查表的「公式」页有完整对照。</div></div>';
+  }
+  if(modId === 'lead'){
+    html += '<div class="card" style="padding:13px 15px"><div class="setdesc" style="margin:0">' +
+      '只求<b>首位</b>或<b>前两位</b>，不要求算出精确值 —— 资料分析里排除选项靠的就是这个。' +
+      '「比重首位」是部分 ÷ 整体后百分数的第一位数字（21.7% 填 2）。' +
+      '判分是精确整数，没有误差容限。答错时会显示区间校验过程。</div></div>';
+  }
+  if(modId === 'flash'){
+    html += '<div class="card" style="padding:13px 15px"><div class="setdesc" style="margin:0">' +
+      '不用输入。看到题先自己回忆，点「揭晓答案」核对，再诚实地点「记住了 / 没记住」。' +
+      '系统只统计<b>回忆用时</b>（从出题到点揭晓），不含看答案的时间。' +
+      '一轮把表过完（分母范围选「表全量 40 项」+ 练习量 40 题）效果最好。</div></div>';
+  }
+  if(modId === 'mixed'){
+    html += '<div class="card" style="padding:13px 15px"><div class="setdesc" style="margin:0">' +
+      '综合练习按各题型默认设置随机出题：除法三位数混合、首数法商的首位、百化分 1.5~20 正向、' +
+      '平方 11~30、立方 2~15、两步运算整数分母增长量。闪卡是独立交互，不参与混合。</div></div>';
+  }
+
+  html += '<div class="startb"><button class="bigbtn" id="btnStart">开 始 练 习</button>' +
+          '<div class="modehint" id="modeHint"></div></div>';
+
+  $('#setBody').innerHTML = html;
+
+  var modeHint = function(){
+    var c = db().count;
+    var t = (c === 'inf') ? '无尽模式 · 手动结束才结算'
+          : (c === 't60') ? '限时 60 秒 · 能做多少做多少'
+          : (c === 't120') ? '限时 120 秒 · 能做多少做多少'
+          : ('共 ' + c + ' 道题 · 做完自动结算');
+    $('#modeHint').textContent = t;
+  };
+  modeHint();
+
+  $('#segCount').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    Array.prototype.forEach.call(this.children, function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    var v = b.getAttribute('data-v');
+    db().count = (v === 'inf' || v === 't60' || v === 't120') ? v : parseInt(v,10);
+    saveDB(); modeHint();
+  });
+  var tolSeg = $('#segTol');
+  if(tolSeg){
+    tolSeg.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      Array.prototype.forEach.call(this.children, function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      db().tol = parseInt(b.getAttribute('data-v'),10);
+      saveDB();
+    });
+  }
+  Array.prototype.forEach.call($('#setBody').querySelectorAll('.seg[data-key]'), function(seg){
+    seg.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      Array.prototype.forEach.call(this.children, function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      persistOpt(mod, seg.getAttribute('data-key'), b.getAttribute('data-v'));
+    });
+  });
+  $('#btnStart').addEventListener('click', function(){ startPractice(modId); });
+  go('s-setup');
+}
+
+/* ============================================================
+   8. 做题
+   ============================================================ */
+var S = {
+  mod:null, opt:{}, endless:false, limit:10, timeLimit:0,
+  seen:{}, queue:null, answers:[], cur:null,
+  input:'', locked:false, qStart:0, tStart:0, tick:null, prev:null,
+  done:false, lastWrong:[],
+  flash:false, flashShown:false, recallMs:0
+};
+
+function buildPad(){
+  /* 闪卡模式没有输入，键盘整块换成「揭晓 / 记住了 / 没记住」 */
+  if(S.flash){
+    $('#padGrid').style.display = 'none';
+    $('#padFlash').style.display = '';
+    renderFlashPad();
+    return;
+  }
+  $('#padGrid').style.display = '';
+  $('#padFlash').style.display = 'none';
+
+  var needsDot = !(S.mod === 'sq' || S.mod === 'cube');
+  var keys = ['7','8','9','4','5','6','1','2','3'];
+  var html = '';
+  keys.forEach(function(k){ html += '<button class="key" data-k="'+k+'">'+k+'</button>'; });
+  html += '<button class="key" data-k="'+(needsDot?'.':'00')+'">'+(needsDot?'.':'00')+'</button>';
+  html += '<button class="key" data-k="0">0</button>';
+  html += '<button class="key fn" data-k="del">⌫</button>';
+  html += '<button class="key okk" data-k="ok">确 认</button>';
+  $('#padGrid').innerHTML = html;
+}
+
+/* ---------- 闪卡：揭晓前 / 揭晓后两态 ---------- */
+function renderFlashPad(){
+  $('#padFlash').innerHTML = S.flashShown
+    ? '<div class="fbtnrow">' +
+      '<button class="fbtn yes" data-f="1">✓ 记住了</button>' +
+      '<button class="fbtn no" data-f="0">✗ 没记住</button></div>'
+    : '<button class="fbtn reveal" data-f="r">揭 晓 答 案</button>';
+}
+function renderFlashFace(){
+  var el = $('#ansVal'), ab = $('#ansBox');
+  if(S.flashShown){
+    el.className = 'ansval';
+    el.textContent = S.cur.back || S.cur.ansText;
+    ab.className = 'ansbox ok';
+  } else {
+    el.className = 'ansval ph';
+    el.textContent = '先自己想，再揭晓';
+    ab.className = 'ansbox';
+  }
+}
+function flashReveal(){
+  if(S.locked || S.flashShown) return;
+  S.flashShown = true;
+  S.recallMs = Date.now() - S.qStart;      // 只记"回忆用时"，不含看答案的时间
+  renderFlashFace();
+  renderFlashPad();
+}
+function flashJudge(known){
+  if(S.locked || !S.flashShown) return;
+  S.locked = true;
+  var ms = S.recallMs || (Date.now() - S.qStart);
+  S.answers.push({ q:S.cur, user:(known ? '记住了' : '没记住'), ok:known, ms:ms, err:null });
+
+  $('#ansBox').className = 'ansbox ' + (known ? 'ok' : 'bad');
+  var fb = $('#fb');
+  fb.className = 'fb show ' + (known ? 'good' : 'bad');
+  fb.innerHTML = known
+    ? '<div class="big">✓ 记住了</div><div class="sm">回忆用时 ' + fmtSec(ms,1) + ' 秒</div>'
+    : '<div class="big">✗ 再记一遍</div><div class="sm">' + S.cur.plain + ' ' +
+      (S.cur.back || S.cur.ansText) + '</div>';
+  beep(known); buzz(known);
+  updateProgress();
+
+  setTimeout(function(){
+    fb.className = 'fb';
+    nextQuestion();
+  }, known ? 340 : 1100);
+}
+
+function startPractice(modId, preset){
+  var mod = getMod(modId);
+  S.mod = modId;
+  S.opt = optsFor(modId);
+  S.queue = (preset && preset.length) ? preset.slice() : null;
+  S.seen = {}; S.answers = []; S.cur = null; S.input = ''; S.locked = false; S.done = false;
+  S.flash = (modId === 'flash');
+  S.flashShown = false; S.recallMs = 0;
+
+  if(S.queue){
+    S.endless = false; S.limit = S.queue.length; S.timeLimit = 0;
+  } else {
+    var c = db().count;
+    if(c === 'inf'){ S.endless = true; S.limit = Infinity; S.timeLimit = 0; }
+    else if(c === 't60' || c === 't120'){ S.endless = true; S.limit = Infinity; S.timeLimit = (c==='t60'?60:120)*1000; }
+    else { S.endless = false; S.limit = c; S.timeLimit = 0; }
+  }
+
+  var list = db().sessions.filter(function(s){ return s.mod === modId; });
+  S.prev = list.length ? list[list.length-1] : null;
+
+  buildPad();
+  $('#btnEnd').style.visibility = (S.endless || S.timeLimit) ? 'visible' : 'hidden';
+  $('#pbarFill').style.width = '0%';
+  $('#pTime').className = 'tm';
+  $('#pTime').textContent = S.timeLimit ? fmtClock(S.timeLimit) : '00:00';
+
+  S.tStart = Date.now();
+  clearInterval(S.tick);
+  S.tick = setInterval(function(){
+    if(S.done) return;
+    var el = Date.now() - S.tStart;
+    if(S.timeLimit){
+      var left = S.timeLimit - el;
+      if(left <= 0){
+        $('#pTime').textContent = '00:00';
+        finish();
+        return;
+      }
+      $('#pTime').textContent = fmtClock(left);
+      $('#pTime').className = 'tm' + (left <= 10000 ? ' warn' : '');
+      $('#pbarFill').style.width = Math.min(100, el/S.timeLimit*100) + '%';
+    } else {
+      $('#pTime').textContent = fmtClock(el);
+    }
+  }, 100);
+
+  go('s-practice');
+  nextQuestion();
+}
+
+function updateProgress(){
+  var unit = S.flash ? '张' : '题';
+  if(S.endless){
+    $('#pCount').textContent = '第 ' + (S.answers.length + 1) + ' ' + unit;
+    if(!S.timeLimit) $('#pbarFill').style.width = '100%';
+  } else {
+    var done = S.answers.length;
+    $('#pCount').textContent = Math.min(done+1, S.limit) + ' / ' + S.limit;
+    $('#pbarFill').style.width = (done/S.limit*100) + '%';
+  }
+}
+
+/* 材料卡：只生成内层，外层 #qText 自己就是 .qmat 容器 */
+function matHTML(rows, ask){
+  var h = '';
+  rows.forEach(function(r){
+    h += '<div class="mrow"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>';
+  });
+  h += '<div class="mask">' + ask + '</div>';
+  return h;
+}
+
+function nextQuestion(){
+  if(!S.endless && S.answers.length >= S.limit){ finish(); return; }
+  var q;
+  if(S.queue && S.queue.length){ q = S.queue.shift(); }
+  else { q = genUnique(S.mod, S.opt, S.seen); }
+  if(!q){ finish(); return; }
+  S.cur = q;
+  S.input = '';
+  S.locked = false;
+  S.flashShown = false; S.recallMs = 0;
+  $('#qTag').textContent = q.tag;
+  var qt = $('#qText');
+  if(q.mat){
+    qt.className = 'qmat';
+    qt.innerHTML = matHTML(q.mat, q.ask);
+  } else {
+    qt.className = 'qtext';
+    qt.innerHTML = q.html;
+  }
+  $('#qHint').textContent = q.hint || '';
+  $('#fb').className = 'fb';
+  if(S.flash){
+    renderFlashFace();
+    renderFlashPad();
+  } else {
+    renderInput();
+    $('#ansBox').className = 'ansbox';
+  }
+  updateProgress();
+  S.qStart = Date.now();
+}
+
+function renderInput(){
+  var el = $('#ansVal');
+  if(S.input === ''){
+    el.className = 'ansval ph';
+    el.textContent = '请输入答案';
+  } else {
+    el.className = 'ansval';
+    el.innerHTML = S.input + '<span class="caret"></span>';
+  }
+}
+
+function press(k){
+  if(S.locked) return;
+  if(k === 'ok'){ submit(); return; }
+  if(k === 'del'){ S.input = S.input.slice(0,-1); renderInput(); return; }
+  if(k === '00'){
+    if(S.input === '' || S.input === '0') return;
+    if(S.input.length >= 10) return;
+    S.input += '00'; renderInput(); return;
+  }
+  if(k === '.'){
+    if(S.input.indexOf('.') >= 0) return;
+    if(S.input.length >= 12) return;
+    S.input = (S.input === '' ? '0' : S.input) + '.';
+    renderInput(); return;
+  }
+  if(S.input.length >= 12) return;
+  if(S.input === '0') S.input = '';
+  S.input += k;
+  renderInput();
+}
+
+function submit(){
+  if(S.locked) return;
+  if(S.input === '' || S.input === '0.' || S.input === '.'){
+    var ab = $('#ansBox');
+    ab.classList.remove('shake');
+    void ab.offsetWidth;
+    ab.classList.add('shake');
+    return;
+  }
+  var u = parseFloat(S.input);
+  if(isNaN(u)) return;
+  S.locked = true;
+  var ms = Date.now() - S.qStart;
+  var ok = S.cur.check(u);
+  var err = S.cur.tol ? relErr(u, S.cur.ansVal) : null;
+  S.answers.push({ q:S.cur, user:S.input, ok:ok, ms:ms, err:err });
+
+  $('#ansBox').className = 'ansbox ' + (ok ? 'ok' : 'bad');
+  var fb = $('#fb');
+  fb.className = 'fb show ' + (ok ? 'good' : 'bad');
+
+  var sub;
+  if(ok){
+    sub = '用时 ' + fmtSec(ms,1) + ' 秒';
+    if(err !== null) sub = '误差 ' + (err*100).toFixed(1) + '% · ' + sub;
+  } else {
+    sub = '你输入的是 ' + S.input;
+    if(err !== null) sub += ' · 误差 ' + (err*100).toFixed(1) + '%';
+  }
+  fb.innerHTML = ok
+    ? '<div class="big">✓ 正确</div><div class="sm">' + sub + '</div>'
+    : '<div class="big">✗ 正确答案 ' + S.cur.ansText + '</div><div class="sm">' + sub + '</div>' +
+      (S.cur.explain ? '<div class="path">' + S.cur.explain + '</div>' : '');
+
+  beep(ok); buzz(ok);
+  updateProgress();
+
+  // 错题且带口算路径时多停一会儿，让人看清"该怎么做"
+  var wait = ok ? 380 : (S.cur.explain ? 1900 : 1150);
+  setTimeout(function(){
+    fb.className = 'fb';
+    nextQuestion();
+  }, wait);
+}
+
+function finish(){
+  if(S.done) return;
+  S.done = true;
+  clearInterval(S.tick);
+
+  var ans = S.answers;
+  if(!ans.length){ go('s-home'); renderHome(); return; }
+
+  var totalMs = Date.now() - S.tStart;
+  var okN = 0, msSum = 0, errSum = 0, errN = 0;
+  ans.forEach(function(a){
+    if(a.ok) okN++;
+    msSum += a.ms;
+    // 平均误差只统计答对的题：衡量"估算精度"，避免被离谱答案带偏
+    if(a.ok && a.err !== null){ errSum += a.err; errN++; }
+  });
+
+  var rec = {
+    id: Date.now(),
+    mod: S.mod,
+    mode: S.timeLimit ? 'timed' : (S.endless ? 'endless' : 'fixed'),
+    n: ans.length,
+    ok: okN,
+    ms: totalMs,
+    avg: msSum / ans.length,
+    avgErr: errN ? errSum/errN : null,
+    ts: Date.now(),
+    wrong: ans.filter(function(a){ return !a.ok; }).map(function(a){
+      return { plain:a.q.plain, user:a.user, ans:(a.q.back || a.q.ansText), ms:a.ms };
+    })
+  };
+  S.lastWrong = ans.filter(function(a){ return !a.ok; }).map(function(a){ return a.q; });
+
+  var d = db();
+  d.sessions.push(rec);
+  if(d.sessions.length > 400) d.sessions = d.sessions.slice(-400);
+  saveDB();
+
+  renderResult(rec);
+  go('s-result');
+}
+
+/* ============================================================
+   9. 折线图（纯 SVG）
+   ============================================================ */
+function niceStep(v){
+  if(v <= 0) return 1;
+  var e = Math.pow(10, Math.floor(Math.log10(v)));
+  var m = v/e;
+  var s = m<=1?1 : m<=1.5?1.5 : m<=2?2 : m<=2.5?2.5 : m<=3?3 : m<=4?4 : m<=5?5 : m<=6?6 : m<=8?8 : 10;
+  return s*e;
+}
+function stepDec(step){
+  if(step >= 1) return (Math.abs(step - Math.round(step)) < 1e-9) ? 0 : 1;
+  return step >= 0.05 ? 2 : 3;
+}
+function buildChart(list){
+  if(!list.length) return '<div class="empty">还没有记录，做完一次就会出现趋势图</div>';
+  var vals = list.map(function(s){ return s.avg/1000; });
+  var n = vals.length;
+  var W = 560, H = 220, PL = 54, PR = 22, PT = 26, PB = 42;
+  var iw = W-PL-PR, ih = H-PT-PB;
+  var maxV = Math.max.apply(null, vals);
+  var minV = Math.min.apply(null, vals);
+  var avg = vals.reduce(function(a,b){ return a+b; },0)/n;
+
+  // 自适应纵轴：让趋势看得见，而不是被 0 压扁
+  var pad = Math.max((maxV-minV)*0.5, maxV*0.12, 0.02);
+  var lo = Math.max(0, minV - pad), hi = maxV + pad;
+  var step = niceStep((hi-lo)/4);
+  var bottom = Math.max(0, Math.floor(lo/step)*step);
+  var top = bottom + step*4;
+  var guard = 0;
+  while(top < hi - 1e-9 && guard++ < 12){ step = niceStep(step*2); top = bottom + step*4; }
+  var rng = top - bottom;
+  var dprec = stepDec(step);
+
+  var X = function(i){ return n===1 ? PL+iw/2 : PL + iw*i/(n-1); };
+  var Y = function(v){ return PT + ih - ih*((v-bottom)/rng); };
+
+  var s = '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
+  s += '<defs>' +
+       '<linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">' +
+       '<stop offset="0%" stop-color="#5b4bff" stop-opacity="0.26"/>' +
+       '<stop offset="100%" stop-color="#5b4bff" stop-opacity="0.01"/></linearGradient>' +
+       '<linearGradient id="lg" x1="0" y1="0" x2="1" y2="0">' +
+       '<stop offset="0%" stop-color="#5b4bff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>' +
+       '</defs>';
+
+  for(var g=0; g<=4; g++){
+    var gv = bottom + step*g;
+    var y = Y(gv);
+    s += '<line x1="'+PL+'" y1="'+y.toFixed(1)+'" x2="'+(PL+iw)+'" y2="'+y.toFixed(1)+'" stroke="#eef0f8" stroke-width="1"/>';
+    s += '<text x="'+(PL-9)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="#939ab0">'+gv.toFixed(dprec)+'s</text>';
+  }
+
+  var pts = vals.map(function(v,i){ return [X(i), Y(v)]; });
+  var line = pts.map(function(p,i){ return (i?'L':'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+  if(n > 1){
+    s += '<path d="'+line+' L '+X(n-1).toFixed(1)+' '+(PT+ih)+' L '+X(0).toFixed(1)+' '+(PT+ih)+' Z" fill="url(#ag)"/>';
+  }
+  var ya = Y(avg);
+  s += '<line x1="'+PL+'" y1="'+ya.toFixed(1)+'" x2="'+(PL+iw)+'" y2="'+ya.toFixed(1)+'" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.75"/>';
+  if(n > 1) s += '<path d="'+line+'" fill="none" stroke="url(#lg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+
+  var minIdx = vals.indexOf(minV), maxIdx = vals.indexOf(maxV);
+  pts.forEach(function(p,i){
+    var isMin = (i === minIdx), isMax = (i === maxIdx && n > 1 && maxIdx !== minIdx);
+    s += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(isMin?5.4:3.8)+'" fill="#fff" stroke="'+(isMin?'#0fae6e':(isMax?'#ef4444':'#5b4bff'))+'" stroke-width="2.4"/>';
+  });
+  var labelIdx = {};
+  labelIdx[n-1] = 1;
+  if(n > 1) labelIdx[minIdx] = 1;
+  if(n > 3) labelIdx[maxIdx] = 1;
+  Object.keys(labelIdx).forEach(function(k){
+    var i = parseInt(k,10), p = pts[i];
+    var col = (i===minIdx) ? '#0a8f5a' : (i===maxIdx ? '#cf3b3b' : '#5b4bff');
+    var ty = p[1] - 11; if(ty < PT+11) ty = p[1] + 18;
+    var anchor = 'middle', tx = p[0];
+    if(n > 1 && i === 0){ anchor = 'start'; tx = p[0] - 6; }
+    else if(n > 1 && i === n-1){ anchor = 'end'; tx = p[0] + 6; }
+    s += '<text x="'+tx.toFixed(1)+'" y="'+ty.toFixed(1)+'" text-anchor="'+anchor+'" font-size="11" font-weight="700" fill="'+col+'">'+vals[i].toFixed(2)+'</text>';
+  });
+
+  var xstep = Math.max(1, Math.ceil(n/5));
+  for(var i2=0; i2<n; i2+=xstep){
+    if(i2 === n-1) continue;
+    if((n-1) - i2 < xstep*0.75) continue;
+    var dt = new Date(list[i2].ts);
+    s += '<text x="'+X(i2).toFixed(1)+'" y="'+(PT+ih+20)+'" text-anchor="middle" font-size="10.5" fill="#939ab0">'+(dt.getMonth()+1)+'/'+dt.getDate()+'</text>';
+  }
+  if(n > 1){
+    var dt2 = new Date(list[n-1].ts);
+    s += '<text x="'+X(n-1).toFixed(1)+'" y="'+(PT+ih+20)+'" text-anchor="middle" font-size="10.5" fill="#939ab0">'+(dt2.getMonth()+1)+'/'+dt2.getDate()+'</text>';
+  }
+  s += '</svg>';
+  return s;
+}
+
+/* ============================================================
+   10. 结果页
+   ============================================================ */
+function renderResult(rec){
+  var mod = getMod(rec.mod);
+  var acc = rec.ok / rec.n;
+  var avgMs = rec.avg;
+  var circ = 2*Math.PI*52;
+
+  /* 闪卡没有"对错"，只有"记住 / 没记住"，措辞整套换掉 */
+  var isFlash = (rec.mod === 'flash');
+  var L = isFlash ? {
+        acc:'记住率', okN:'记住 / 总数', per:'平均每张', trend:'平均每张回忆用时趋势',
+        wrong:'没记住的卡片', unit:'张', empty:'全部记住了，没有遗漏',
+        emptyHint:'换个方向（1/n → 小数 ↔ 小数 → 1/n）再来一轮'
+      } : {
+        acc:'正确率', okN:'答对 / 总题数', per:'平均每题', trend:'平均每题用时趋势',
+        wrong:'错题回顾', unit:'题', empty:'全部答对，没有错题',
+        emptyHint:'可以试试限时挑战，或者把误差收紧到 1%'
+      };
+
+  $('#resTitle').textContent = mod.name + ' · 结果';
+
+  var times = S.answers.map(function(a){ return a.ms; });
+  var fast = Math.min.apply(null, times);
+  var slow = Math.max.apply(null, times);
+  var tmean = times.reduce(function(a,b){ return a+b; },0)/times.length;
+  var sd = Math.sqrt(times.reduce(function(a,b){ return a + (b-tmean)*(b-tmean); },0)/times.length);
+
+  var html = '';
+  html += '<div class="rcard">';
+  html += '  <div class="rtop">';
+  html += '    <div class="ringwrap">';
+  html += '      <svg viewBox="0 0 120 120" width="112" height="112">';
+  html += '        <circle cx="60" cy="60" r="52" fill="none" stroke="#eef0f8" stroke-width="12"/>';
+  html += '        <circle cx="60" cy="60" r="52" fill="none" stroke="url(#rg)" stroke-width="12" stroke-linecap="round"';
+  html += '          stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+(circ*(1-acc)).toFixed(1)+'"/>';
+  html += '        <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">';
+  html += '          <stop offset="0%" stop-color="#5b4bff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>';
+  html += '      </svg>';
+  html += '      <div class="ringtxt"><b>'+Math.round(acc*100)+'%</b><span>'+L.acc+'</span></div>';
+  html += '    </div>';
+  html += '    <div class="rmeta">';
+  html += '      <div class="mt"><span>'+L.okN+'</span><b>'+rec.ok+'<i> / '+rec.n+'</i></b></div>';
+  html += '      <div class="mt"><span>总用时</span><b>'+fmtClock(rec.ms)+'</b></div>';
+  html += '      <div class="mt"><span>'+L.per+'</span><b>'+fmtSec(avgMs,2)+'<i> 秒</i></b></div>';
+  html += '      <div class="mt"><span>平均误差</span><b>'+(rec.avgErr==null?'—':(rec.avgErr*100).toFixed(1)+'<i>%</i>')+'</b></div>';
+  html += '    </div>';
+  html += '  </div>';
+  html += '  <div class="minrow">';
+  html += '    <div><span>最快</span><b>'+fmtSec(fast,1)+'s</b></div>';
+  html += '    <div><span>最慢</span><b>'+fmtSec(slow,1)+'s</b></div>';
+  html += '    <div><span>波动</span><b>±'+fmtSec(sd,1)+'s</b></div>';
+  html += '  </div>';
+
+  if(S.prev){
+    var dAvg = avgMs - S.prev.avg;
+    var thr = Math.max(30, S.prev.avg * 0.04);
+    var dAcc = acc - (S.prev.ok/S.prev.n);
+    html += '<div class="cmp">与上次相比：';
+    if(Math.abs(dAvg) < thr){
+      html += '<span class="pill eq">平均用时持平</span>';
+    } else if(dAvg < 0){
+      html += '<span class="pill dn">平均用时 ↓ ' + fmtSec(Math.abs(dAvg),2) + 's 更快</span>';
+    } else {
+      html += '<span class="pill up">平均用时 ↑ ' + fmtSec(dAvg,2) + 's 更慢</span>';
+    }
+    if(Math.abs(dAcc) < 0.005){
+      html += '<span class="pill eq">' + L.acc + '持平</span>';
+    } else if(dAcc > 0){
+      html += '<span class="pill dn">' + L.acc + ' ↑ ' + Math.round(dAcc*100) + '%</span>';
+    } else {
+      html += '<span class="pill up">' + L.acc + ' ↓ ' + Math.round(Math.abs(dAcc)*100) + '%</span>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // 折线图
+  var hist = db().sessions.filter(function(s){ return s.mod === rec.mod; }).slice(-15);
+  var best = null, sum = 0;
+  hist.forEach(function(s){ sum += s.avg; if(best === null || s.avg < best) best = s.avg; });
+  var hmean = hist.length ? sum/hist.length : 0;
+  html += '<div class="rcard">';
+  html += '  <div class="sect"><i></i>'+L.trend+'<em>最近 ' + hist.length + ' 次 · 均值 ' + fmtSec(hmean,2) + 's · 最好 ' + fmtSec(best,2) + 's</em></div>';
+  html += '  <div class="chartbox">' + buildChart(hist) + '</div>';
+  html += '</div>';
+
+  // 错题 / 没记住的卡片
+  if(rec.wrong.length){
+    html += '<div class="rcard">';
+    html += '  <div class="sect"><i></i>'+L.wrong+'<em>' + rec.wrong.length + ' ' + L.unit + '</em></div>';
+    rec.wrong.forEach(function(w){
+      html += '<div class="wrongitem">' +
+              '<div class="qq">' + w.plain + '</div>' +
+              (isFlash ? '' : '<div class="uu">' + w.user + '</div>') +
+              '<div class="ar">→</div>' +
+              '<div class="aa">' + w.ans + '</div>' +
+              '<div class="tt">' + fmtSec(w.ms,1) + 's</div>' +
+              '</div>';
+    });
+    html += '<button class="redo" id="btnRedo">↻ 重练这 ' + rec.wrong.length + ' ' + L.unit + '</button>';
+    html += '</div>';
+  } else {
+    html += '<div class="rcard" style="text-align:center;padding:22px">' +
+            '<div style="font-size:32px">🎉</div>' +
+            '<div style="font-size:14px;font-weight:700;margin-top:8px">' + L.empty + '</div>' +
+            '<div style="font-size:12px;color:#939ab0;margin-top:5px">' + L.emptyHint + '</div>' +
+            '</div>';
+  }
+
+  // 历史记录
+  var recent = db().sessions.filter(function(s){ return s.mod === rec.mod; }).slice(-8).reverse();
+  html += '<div class="rcard">';
+  html += '  <div class="sect"><i></i>历史结果<em>最近 ' + recent.length + ' 次</em></div>';
+  recent.forEach(function(s, i){
+    var dt = new Date(s.ts);
+    var modeTxt = s.mode==='endless' ? '无尽' : (s.mode==='timed' ? '限时' : '');
+    var tag = (i === 0) ? '<span class="pill eq" style="margin-left:6px">本次</span>' : '';
+    html += '<div class="wrongitem">' +
+            '<div class="qq">' + (dt.getMonth()+1) + '/' + dt.getDate() + ' ' + pad2(dt.getHours()) + ':' + pad2(dt.getMinutes()) +
+              (modeTxt ? ' <span style="color:#939ab0;font-weight:400;font-size:11px">'+modeTxt+'</span>' : '') + tag + '</div>' +
+            '<div style="color:#5b6276;font-size:12.5px">' + s.n + ' ' + L.unit + '</div>' +
+            '<div class="aa">' + Math.round(s.ok/s.n*100) + '%</div>' +
+            '<div class="tt">' + fmtSec(s.avg,2) + 's/' + L.unit + '</div>' +
+            '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="resbtns">' +
+          '<button class="p1" id="btnAgain">再 练 一 次</button>' +
+          '<button class="p2" id="btnChange">换 题 型</button>' +
+          '</div>';
+
+  $('#resBody').innerHTML = html;
+  $('#btnAgain').addEventListener('click', function(){ startPractice(rec.mod); });
+  $('#btnChange').addEventListener('click', function(){ go('s-home'); renderHome(); });
+  var redo = $('#btnRedo');
+  if(redo){
+    redo.addEventListener('click', function(){ startPractice(rec.mod, S.lastWrong); });
+  }
+}
+
+/* ============================================================
+   11. 速查表
+   ============================================================ */
+function tcellBai(n){
+  return '<div class="tcell"><span class="tk">1/'+n+'</span><span class="tv">'+baiText(n)+'</span></div>';
+}
+function renderTable(which){
+  var html = '', i;
+  if(which === 'bai'){
+    var left = [], right = [];
+    for(i=1;i<=20;i++) left.push(i);
+    for(i=1.5;i<=20.5;i+=1) right.push(i);
+    html += '<div class="tnote">1/n 的小数值，保留 6 位小数（与你那张表一致）。练习时误差在设定范围内即算对。</div>';
+    html += '<div class="tgrid">';
+    for(i=0;i<20;i++){ html += tcellBai(left[i]) + tcellBai(right[i]); }
+    html += '</div>';
+  } else if(which === 'fml'){
+    html += '<div class="tnote">资料分析里最常考的复合两步运算。只要增长率能化成 1/n，两步就塌缩成一次除法 —— ' +
+            '这才是百化分表真正的用途。</div>';
+    html += '<div class="fml">';
+    [
+      ['增长量 · 给现期', '增长量 = 现期 × r ÷ (1+r)', 'r = 1/n 时 → <b>现期 ÷ (n+1)</b>',
+       '456、+14.3%（≈1/7）→ 456 ÷ 8 ≈ 57'],
+      ['增长量 · 给基期', '增长量 = 基期 × r', 'r = 1/n 时 → <b>基期 ÷ n</b>',
+       '456、+12.5%（=1/8）→ 456 ÷ 8 = 57'],
+      ['基期量', '基期 = 现期 ÷ (1+r)', 'r = 1/n 时 → <b>现期 − 现期 ÷ (n+1)</b>',
+       '456、+14.3% → 456 − 57 = 399'],
+      ['比重', '比重 = 部分 ÷ 整体', '<b>一次除法</b>，结果写成百分数',
+       '87 ÷ 412 ≈ 21.1%']
+    ].forEach(function(r){
+      html += '<div class="fmlrow"><div class="t">' + r[0] + '</div>' +
+              '<div class="f">' + r[1] + '<br>' + r[2] + '</div>' +
+              '<div class="e">例：<b>' + r[3] + '</b></div></div>';
+    });
+    html += '<div class="fmlrow warn"><div class="t">故意不做的两类</div>' +
+            '<div class="f">比重变化量（三步、数字极敏感，真题只考「判断升降」）、年均增长率（要开方）。' +
+            '硬把它们做成口算题只会变成折磨，不是训练。</div></div>';
+    html += '</div>';
+    html += '<div class="tnote" style="margin:16px 0 10px">增长率速认：看到左边就想到右边，再套上面的公式。</div>';
+    html += '<div class="tgrid">';
+    baiPool('mid').forEach(function(n){
+      html += '<div class="tcell"><span class="tk">+' + pctStr(n) + '</span><span class="tv">≈ 1/' + fmtN(n) + '</span></div>';
+    });
+    html += '</div>';
+  } else {
+    var pw = which === 'sq' ? 2 : 3;
+    html += '<div class="tnote">1 ~ 30 的' + (pw===2 ? '平方' : '立方') + '。</div>';
+    html += '<div class="tgrid c3">';
+    for(i=1;i<=30;i++){
+      html += '<div class="tcell"><span class="tk">'+i+(pw===2?'²':'³')+'</span><span class="tv">'+Math.pow(i,pw)+'</span></div>';
+    }
+    html += '</div>';
+  }
+  $('#tblBody').innerHTML = html;
+}
+
+/* ============================================================
+   12. 事件绑定
+   ============================================================ */
+$('#padGrid').addEventListener('click', function(e){
+  var b = e.target.closest('.key'); if(!b) return;
+  press(b.getAttribute('data-k'));
+});
+$('#padFlash').addEventListener('click', function(e){
+  var b = e.target.closest('.fbtn'); if(!b) return;
+  var f = b.getAttribute('data-f');
+  if(f === 'r') flashReveal();
+  else flashJudge(f === '1');
+});
+$('#btnQuit').addEventListener('click', function(){
+  if(S.answers.length === 0){ clearInterval(S.tick); S.done = true; go('s-home'); renderHome(); return; }
+  if(confirm('放弃本次练习？已做的题目不会被记录。')){
+    clearInterval(S.tick); S.done = true; go('s-home'); renderHome();
+  }
+});
+$('#btnEnd').addEventListener('click', function(){
+  if(confirm('结束本次练习并查看统计？')) finish();
+});
+$('#btnBack').addEventListener('click', function(){ go('s-home'); renderHome(); });
+$('#btnResHome').addEventListener('click', function(){ go('s-home'); renderHome(); });
+
+$('#btnTable').addEventListener('click', function(){ renderTable('bai'); go('s-table'); });
+$('#btnTblBack').addEventListener('click', function(){ go('s-home'); renderHome(); });
+$('#tblTabs').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(!b) return;
+  Array.prototype.forEach.call(this.children, function(x){ x.classList.remove('on'); });
+  b.classList.add('on');
+  renderTable(b.getAttribute('data-v'));
+});
+
+$('#btnSound').addEventListener('click', function(){
+  db().sound = !db().sound; saveDB();
+  this.textContent = (db().sound ? '🔊' : '🔇') + ' 声音反馈';
+  if(db().sound) beep(true);
+});
+$('#btnClear').addEventListener('click', function(){
+  if(!confirm('确定清空全部练习记录？此操作不可撤销。')) return;
+  db().sessions = []; saveDB(); renderHome();
+});
+$('#btnExport').addEventListener('click', function(){
+  var txt = JSON.stringify(db());
+  var done = function(){ alert('记录已复制到剪贴板（' + db().sessions.length + ' 条）。可以粘贴到备忘录里备份。'); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done, function(){ window.prompt('复制下面的内容备份：', txt); });
+  } else {
+    window.prompt('复制下面的内容备份：', txt);
+  }
+});
+$('#btnImport').addEventListener('click', function(){
+  var t = window.prompt('粘贴之前导出的内容：', '');
+  if(!t) return;
+  try{
+    var o = JSON.parse(t);
+    if(!o || !Array.isArray(o.sessions)) throw new Error('bad');
+    db().sessions = o.sessions; saveDB(); renderHome();
+    alert('导入成功，共 ' + o.sessions.length + ' 条记录。');
+  }catch(e){ alert('内容无法识别，请确认粘贴完整。'); }
+});
+
+// 桌面端键盘支持
+document.addEventListener('keydown', function(e){
+  if(!$('#s-practice').classList.contains('on')) return;
+  if(S.flash){                                 // 闪卡用鼠标/手指点按钮，键盘不参与
+    if(e.key === ' ' || e.key === 'Enter'){ (S.flashShown ? null : flashReveal()); e.preventDefault(); }
+    return;
+  }
+  var k = e.key;
+  if(k >= '0' && k <= '9'){ press(k); e.preventDefault(); }
+  else if(k === '.'){ press('.'); e.preventDefault(); }
+  else if(k === 'Backspace'){ press('del'); e.preventDefault(); }
+  else if(k === 'Enter' || k === '='){ press('ok'); e.preventDefault(); }
+});
+document.addEventListener('dblclick', function(e){ e.preventDefault(); }, {passive:false});
+
+/* 启动 */
+renderHome();
+})();
+</script>
+
+<script>
+/* PWA 注册。file:// 下 origin 是 'null'，Service Worker 注册必然抛
+   "The URL protocol of the current origin ('null') is not supported"，
+   所以先判断协议再注册 —— 单文件版拷到手机上打开时不应有任何副作用。 */
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  if(location.protocol !== 'http:' && location.protocol !== 'https:') return;
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').then(function(reg){
+      console.log('[速算] Service Worker 已注册: ' + reg.scope);
+    }).catch(function(e){
+      console.log('[速算] Service Worker 注册失败: ' + e.message);
+    });
+  });
+})();
+</script>
+</body>
+</html>
