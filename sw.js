@@ -2,7 +2,7 @@
    策略：stale-while-revalidate（先给缓存，后台顺手更新）
    —— 打开永远秒开，且装完之后完全离线可用；下次启动拿到新版本。
    改了 速算练习.html 之后记得把 build_pwa.py 里的 CACHE_VERSION +1。 */
-var CACHE = 'suan-v1';
+var CACHE = 'suan-v3';
 var ASSETS = [
   './',
   './index.html',

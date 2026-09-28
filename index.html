@@ -14,15 +14,49 @@
 <title>资料分析速算 · 本地离线</title>
 <style>
 :root{
-  --bg:#eef1f8; --card:#ffffff; --line:#e7eaf4; --line2:#f1f3fa;
-  --tx:#171a26; --tx2:#5b6276; --tx3:#939ab0;
+  --bg:#eef1f8; --card:#ffffff; --line:#e7eaf4; --line2:#eef1f8;
+  --tx:#171a26; --tx2:#5b6276; --tx3:#939ab0; --tx4:#c3c9dc;
   --brand:#5b4bff; --brand2:#8b5cf6; --brand3:#a855f7;
-  --ok:#0fae6e; --ok-bg:#e8f8f1;
-  --bad:#ef4444; --bad-bg:#fdecec;
-  --amber:#f59e0b;
+  --brand-bg:#f0edff; --brand-bg2:#f5efff; --brand-ln:#c4b5fd;
+  --ok:#0fae6e; --ok-bg:#e8f8f1; --ok-ln:#9fe3c4; --ok-tx:#0a8f5a;
+  --bad:#ef4444; --bad-bg:#fdecec; --bad-ln:#f8bcbc; --bad-tx:#cf3b3b;
+  --amber:#f59e0b; --amb-bg:#fff8ec; --amb-ln:#f6e3bf; --amb-tx:#8a6420;
+  --fill:#f7f8fd; --fill2:#f1f4fb;
+  --key:#f5f7fc; --key-ln:#eef1f8; --key-a:#e8ecf8;
+  --danger:#d9534f; --danger-bg:#fff5f5; --danger-ln:#f8d7d7;
+  --warn-bg:#fff8e6; --warn-ln:#f7e2b0; --warn-tx:#8a6412;
   --r:18px;
   --sd:0 2px 6px rgba(23,26,38,.05), 0 12px 26px -14px rgba(23,26,38,.18);
 }
+/* ---------- 暗色主题 ---------- */
+html[data-theme="dark"]{
+  --bg:#0d1017; --card:#161a24; --line:#262b39; --line2:#222836;
+  --tx:#e8ebf4; --tx2:#a3abbf; --tx3:#737b91; --tx4:#565e73;
+  --brand:#8b7cff; --brand2:#a78bfa; --brand3:#c084fc;
+  --brand-bg:#241f45; --brand-bg2:#2c2450; --brand-ln:#4a3d9e;
+  --ok:#34d399; --ok-bg:#0f2a20; --ok-ln:#1e5b44; --ok-tx:#5eead4;
+  --bad:#f87171; --bad-bg:#2b1416; --bad-ln:#5d2628; --bad-tx:#fca5a5;
+  --amber:#fbbf24; --amb-bg:#2b2110; --amb-ln:#5a4620; --amb-tx:#fcd34d;
+  --fill:#1a202e; --fill2:#212736;
+  --key:#212836; --key-ln:#2b3242; --key-a:#333b4d;
+  --danger:#f87171; --danger-bg:#2b1416; --danger-ln:#5d2628;
+  --warn-bg:#2b2110; --warn-ln:#5a4620; --warn-tx:#fcd34d;
+  --sd:0 2px 6px rgba(0,0,0,.36), 0 12px 26px -14px rgba(0,0,0,.72);
+}
+html[data-theme="dark"] .hero{background:linear-gradient(135deg,#0a061d 0%,#1c0e3a 48%,#2a1657 100%);color:#fff;}
+html[data-theme="dark"] .hero h1,.hero .tag{color:#fff;}
+html[data-theme="dark"] .hero .blob{background:rgba(255,255,255,.05);}
+html[data-theme="dark"] .hstat{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);}
+html[data-theme="dark"] .mod:active{box-shadow:0 2px 8px rgba(0,0,0,.5);}
+html[data-theme="dark"] .iconb{box-shadow:0 2px 6px rgba(0,0,0,.3);}
+html[data-theme="dark"] .fb .path{border-top-color:rgba(252,165,165,.28);}
+/* 主题切换按钮（首页右上角） */
+.thmbtn{position:absolute;right:14px;top:calc(12px + env(safe-area-inset-top));z-index:4;
+  display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:20px;
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.2px;backdrop-filter:blur(6px);
+  transition:.15s;}
+.thmbtn:active{transform:scale(.93);}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
 body{
@@ -63,24 +97,24 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 .mod .ic span{color:#fff;}
 .mod .nm{font-size:14.5px;font-weight:700;letter-spacing:-.2px;line-height:1.25;}
 .mod .ds{font-size:11.5px;color:var(--tx3);margin-top:-4px;}
-.mod .st{font-size:10.5px;color:var(--tx2);background:#f4f6fc;border-radius:9px;padding:4px 8px;align-self:flex-start;}
+.mod .st{font-size:10.5px;color:var(--tx2);background:var(--fill2);border-radius:9px;padding:4px 8px;align-self:flex-start;}
 .mod.wide{grid-column:span 2;flex-direction:row;align-items:center;gap:13px;}
 .mod.wide .txt{flex:1;display:flex;flex-direction:column;gap:6px;}
-.mod .arw{color:#c6cbdd;font-size:17px;}
+.mod .arw{color:var(--tx4);font-size:17px;}
 
 .foot{padding:20px 18px calc(30px + env(safe-area-inset-bottom));margin-top:auto;}
 .foot .row{display:flex;gap:9px;flex-wrap:wrap;}
-.gbtn{flex:1;min-width:100px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 10px;font-size:12.5px;color:var(--tx2);
+.gbtn{flex:1;min-width:100px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 10px;font-size:12.5px;color:var(--tx2);
   display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s;}
 .gbtn:active{transform:scale(.97);}
 .gbtn.wide{flex:0 0 100%;}
-.gbtn.danger{color:#d9534f;border-color:#f6dcdc;}
-.warn{margin:0 18px 12px;background:#fff8e6;border:1px solid #f7e2b0;color:#8a6412;border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.6;}
+.gbtn.danger{color:var(--danger);border-color:var(--danger-ln);}
+.warn{margin:0 18px 12px;background:var(--warn-bg);border:1px solid var(--warn-ln);color:var(--warn-tx);border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.6;}
 .tiny{text-align:center;font-size:11px;color:var(--tx3);margin-top:14px;line-height:1.7;}
 
 /* ================= 设置 ================= */
 .topbar{display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top)) 16px 12px;}
-.iconb{width:38px;height:38px;border-radius:12px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;
+.iconb{width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;
   font-size:16px;color:var(--tx2);box-shadow:0 2px 6px rgba(23,26,38,.04);flex:0 0 auto;transition:.15s;}
 .iconb:active{transform:scale(.93);}
 .topbar .ttl{font-size:16px;font-weight:700;letter-spacing:-.2px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -90,9 +124,9 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 .card .lb{font-size:12.5px;font-weight:700;color:var(--tx2);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
 .card .lb i{width:4px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--brand),var(--brand3));display:block;}
 .seg{display:flex;flex-wrap:wrap;gap:8px;}
-.seg button{padding:9px 14px;border-radius:11px;background:#f4f6fc;border:1.5px solid transparent;font-size:13px;color:var(--tx2);
+.seg button{padding:9px 14px;border-radius:11px;background:var(--fill2);border:1.5px solid transparent;font-size:13px;color:var(--tx2);
   transition:.15s;font-weight:600;}
-.seg button.on{background:linear-gradient(135deg,#eee9ff,#f5efff);border-color:#c4b5fd;color:var(--brand);box-shadow:0 2px 10px -4px rgba(91,75,255,.5);}
+.seg button.on{background:linear-gradient(135deg,var(--brand-bg),var(--brand-bg2));border-color:var(--brand-ln);color:var(--brand);box-shadow:0 2px 10px -4px rgba(91,75,255,.5);}
 .seg button:active{transform:scale(.95);}
 .setdesc{font-size:11.5px;color:var(--tx3);margin-top:10px;line-height:1.6;}
 .setdesc b{color:var(--tx2);}
@@ -103,45 +137,45 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 .modehint{text-align:center;font-size:11.5px;color:var(--tx3);margin-top:9px;}
 
 /* ================= 做题 ================= */
-#s-practice{height:100vh;height:100dvh;overflow:hidden;background:#fff;}
-.pbar{height:4px;background:#eef0f8;flex:0 0 auto;}
+#s-practice{height:100vh;height:100dvh;overflow:hidden;background:var(--card);}
+.pbar{height:4px;background:var(--line2);flex:0 0 auto;}
 .pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand3));transition:width .3s cubic-bezier(.4,0,.2,1);border-radius:0 3px 3px 0;}
 .ptop{display:flex;align-items:center;gap:10px;padding:10px 14px 8px;flex:0 0 auto;}
 .ptop .mid{flex:1;text-align:center;min-width:0;}
 .ptop .cnt{font-size:12px;color:var(--tx3);font-weight:600;}
 .ptop .tm{font-size:17px;font-weight:700;letter-spacing:.5px;margin-top:1px;}
-.ptop .tm.warn{color:#e5484d;}
-.endb{padding:7px 13px;border-radius:11px;background:#fdecec;color:#d9534f;font-size:12.5px;font-weight:700;border:1px solid #f8d7d7;}
+.ptop .tm.warn{color:var(--bad);}
+.endb{padding:7px 13px;border-radius:11px;background:var(--bad-bg);color:var(--danger);font-size:12.5px;font-weight:700;border:1px solid var(--danger-ln);}
 
 .qwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 20px;min-height:0;}
 .qcard{width:100%;max-width:460px;text-align:center;}
-.qtag{display:inline-block;font-size:11px;font-weight:700;color:var(--brand);background:#f0edff;border-radius:20px;padding:4px 12px;margin-bottom:16px;letter-spacing:.3px;}
+.qtag{display:inline-block;font-size:11px;font-weight:700;color:var(--brand);background:var(--brand-bg);border-radius:20px;padding:4px 12px;margin-bottom:16px;letter-spacing:.3px;}
 .qtext{font-size:44px;font-weight:700;letter-spacing:1px;line-height:1.25;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2px;color:var(--tx);}
 .qtext .op{color:var(--brand);margin:0 8px;font-weight:600;}
-.qtext .eq{color:#c9cee0;margin:0 4px 0 10px;font-weight:600;}
+.qtext .eq{color:var(--tx4);margin:0 4px 0 10px;font-weight:600;}
 .qtext sup{font-size:.55em;font-weight:800;margin-left:1px;position:relative;top:-.45em;}
 .qhint{margin-top:12px;font-size:12px;color:var(--tx3);}
 /* 材料卡（两步运算） */
-.qmat{width:100%;max-width:340px;margin:0 auto;background:#f7f8fd;border:1px solid #eaeef8;border-radius:16px;
+.qmat{width:100%;max-width:340px;margin:0 auto;background:var(--fill);border:1px solid var(--line);border-radius:16px;
   padding:4px 16px 12px;text-align:left;}
-.qmat .mrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px solid #eaedf6;}
+.qmat .mrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
 .qmat .mrow:last-of-type{border-bottom:0;}
 .qmat .mrow span{font-size:13px;color:var(--tx3);flex:0 0 auto;}
 .qmat .mrow b{font-size:20px;font-weight:700;letter-spacing:.3px;}
-.qmat .mask{margin-top:4px;padding-top:12px;border-top:1.5px solid #dee3f2;font-size:15.5px;font-weight:800;
+.qmat .mask{margin-top:4px;padding-top:12px;border-top:1.5px solid var(--line);font-size:15.5px;font-weight:800;
   color:var(--brand);text-align:center;letter-spacing:.8px;}
 .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;margin:0 6px;font-size:.82em;}
 .frac i{font-style:normal;padding:0 8px 3px;}
 .frac b{font-weight:700;padding:3px 8px 0;border-top:3px solid currentColor;}
 
-.ansbox{margin-top:26px;min-height:62px;width:100%;max-width:340px;border-radius:16px;background:#f6f8fd;border:2px solid #e7eaf4;
+.ansbox{margin-top:26px;min-height:62px;width:100%;max-width:340px;border-radius:16px;background:var(--fill);border:2px solid var(--line);
   display:flex;align-items:center;justify-content:center;padding:8px 16px;transition:.18s;}
-.ansbox.ok{background:var(--ok-bg);border-color:#9fe3c4;}
-.ansbox.bad{background:var(--bad-bg);border-color:#f8bcbc;}
+.ansbox.ok{background:var(--ok-bg);border-color:var(--ok-ln);}
+.ansbox.bad{background:var(--bad-bg);border-color:var(--bad-ln);}
 .ansbox.shake{animation:shk .3s;}
 @keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
 .ansval{font-size:34px;font-weight:700;letter-spacing:1px;color:var(--tx);word-break:break-all;text-align:center;line-height:1.1;}
-.ansval.ph{color:#c3c9dc;font-size:22px;font-weight:600;letter-spacing:.5px;}
+.ansval.ph{color:var(--tx4);font-size:22px;font-weight:600;letter-spacing:.5px;}
 .caret{display:inline-block;width:2.5px;height:30px;background:var(--brand);margin-left:3px;border-radius:2px;animation:bl 1.05s steps(1) infinite;vertical-align:middle;}
 @keyframes bl{0%,50%{opacity:1}51%,100%{opacity:0}}
 
@@ -149,39 +183,39 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 .fb{opacity:0;transform:translateY(-8px);transition:.18s cubic-bezier(.3,1.4,.5,1);border-radius:16px;padding:11px 20px;
   text-align:center;pointer-events:none;max-width:100%;}
 .fb.show{opacity:1;transform:none;}
-.fb.good{background:#e8f8f1;border:1.5px solid #9fe3c4;color:#0a8f5a;}
-.fb.bad{background:#fdecec;border:1.5px solid #f8bcbc;color:#cf3b3b;}
+.fb.good{background:var(--ok-bg);border:1.5px solid var(--ok-ln);color:var(--ok-tx);}
+.fb.bad{background:var(--bad-bg);border:1.5px solid var(--bad-ln);color:var(--bad-tx);}
 .fb .big{font-size:19px;font-weight:800;letter-spacing:.4px;white-space:nowrap;}
 .fb .sm{font-size:12px;margin-top:4px;opacity:.85;}
 /* 错题时给出"口算路径"：这是两步运算模块的教学核心。
    公式左对齐 —— 居中的多行算式很难顺着读下来。 */
 .fb .path{margin-top:7px;padding-top:7px;border-top:1px dashed rgba(207,59,59,.3);font-size:12px;
-  font-weight:600;letter-spacing:.2px;line-height:1.45;color:#a83232;text-align:left;}
+  font-weight:600;letter-spacing:.2px;line-height:1.45;color:var(--bad-tx);text-align:left;}
 
-.pad{flex:0 0 auto;padding:8px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #f0f2f9;}
+.pad{flex:0 0 auto;padding:8px 12px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);}
 .padgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
-.key{height:56px;border-radius:14px;background:#f5f7fc;font-size:23px;font-weight:600;color:var(--tx);
-  display:grid;place-items:center;transition:.09s;border:1px solid #eef1f8;user-select:none;}
-.key:active{background:#e8ecf8;transform:scale(.96);}
-.key.fn{background:#eef1fa;font-size:19px;color:var(--tx2);}
+.key{height:56px;border-radius:14px;background:var(--key);font-size:23px;font-weight:600;color:var(--tx);
+  display:grid;place-items:center;transition:.09s;border:1px solid var(--key-ln);user-select:none;}
+.key:active{background:var(--key-a);transform:scale(.96);}
+.key.fn{background:var(--fill2);font-size:19px;color:var(--tx2);}
 .key.okk{grid-column:span 3;height:54px;background:linear-gradient(135deg,var(--brand),var(--brand3));color:#fff;font-size:17px;font-weight:700;
   letter-spacing:3px;box-shadow:0 8px 20px -10px rgba(91,75,255,.9);border:0;}
 .key.okk:active{filter:brightness(.94);transform:scale(.98);}
 
 /* 闪卡模式：键盘整块换成「揭晓 / 记住了 / 没记住」 */
 .fpad{display:flex;flex-direction:column;gap:10px;}
-.fbtn{height:56px;border-radius:14px;border:1px solid #eef1f8;background:#f5f7fc;font-size:17px;font-weight:700;
+.fbtn{height:56px;border-radius:14px;border:1px solid var(--key-ln);background:var(--key);font-size:17px;font-weight:700;
   color:var(--tx);letter-spacing:1.5px;transition:.09s;}
-.fbtn:active{background:#e8ecf8;transform:scale(.98);}
+.fbtn:active{background:var(--key-a);transform:scale(.98);}
 .fbtn.reveal{background:linear-gradient(135deg,var(--brand),var(--brand3));color:#fff;border:0;
   box-shadow:0 8px 20px -10px rgba(91,75,255,.9);letter-spacing:3px;}
-.fbtn.yes{background:#e8f8f1;border-color:#9fe3c4;color:#0a8f5a;}
-.fbtn.no{background:#fdecec;border-color:#f8bcbc;color:#cf3b3b;}
+.fbtn.yes{background:var(--ok-bg);border-color:var(--ok-ln);color:var(--ok-tx);}
+.fbtn.no{background:var(--bad-bg);border-color:var(--bad-ln);color:var(--bad-tx);}
 .fbtnrow{display:flex;gap:10px;}
 .fbtnrow .fbtn{flex:1;}
 
 /* 首数法 / 比重首位题里的百分号 */
-.qtext .pctsign{font-size:.6em;color:#939ab0;margin-left:3px;font-weight:600;}
+.qtext .pctsign{font-size:.6em;color:var(--tx3);margin-left:3px;font-weight:600;}
 
 /* ================= 结果 ================= */
 .reswrap{padding:0 16px calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;}
@@ -193,19 +227,19 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 .ringtxt b{font-size:26px;font-weight:800;letter-spacing:-.5px;}
 .ringtxt span{font-size:10.5px;color:var(--tx3);margin-top:1px;}
 .rmeta{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0;}
-.mt{background:#f7f8fd;border-radius:12px;padding:8px 9px;min-width:0;}
+.mt{background:var(--fill);border-radius:12px;padding:8px 9px;min-width:0;}
 .mt span{font-size:10px;color:var(--tx3);display:block;white-space:nowrap;}
 .mt b{font-size:15px;font-weight:700;letter-spacing:-.2px;}
 .mt b i{font-size:10.5px;font-weight:600;font-style:normal;color:var(--tx3);margin-left:1px;}
 .minrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-.minrow>div{background:#f7f8fd;border-radius:11px;padding:7px 6px;text-align:center;min-width:0;}
+.minrow>div{background:var(--fill);border-radius:11px;padding:7px 6px;text-align:center;min-width:0;}
 .minrow span{font-size:10px;color:var(--tx3);display:block;}
 .minrow b{font-size:13.5px;font-weight:700;}
 .cmp{display:flex;align-items:center;gap:7px;font-size:12.5px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);flex-wrap:wrap;}
 .pill{border-radius:8px;padding:3px 9px;font-size:11.5px;font-weight:700;}
-.pill.up{background:#fdecec;color:#d9534f;}
-.pill.dn{background:#e8f8f1;color:#0a8f5a;}
-.pill.eq{background:#f2f4fa;color:var(--tx2);}
+.pill.up{background:var(--bad-bg);color:var(--danger);}
+.pill.dn{background:var(--ok-bg);color:var(--ok-tx);}
+.pill.eq{background:var(--fill2);color:var(--tx2);}
 .sect{font-size:13px;font-weight:700;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
 .sect i{width:4px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--brand),var(--brand3));display:block;}
 .sect em{font-style:normal;font-size:11px;color:var(--tx3);font-weight:500;margin-left:auto;}
@@ -216,37 +250,37 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 .wrongitem:last-child{border-bottom:0;}
 .wrongitem .qq{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .wrongitem .uu{color:var(--bad);text-decoration:line-through;font-size:12.5px;}
-.wrongitem .ar{color:#c6cbdd;font-size:12px;flex:0 0 auto;}
+.wrongitem .ar{color:var(--tx4);font-size:12px;flex:0 0 auto;}
 .wrongitem .aa{color:var(--ok);font-weight:700;}
 .wrongitem .tt{font-size:10.5px;color:var(--tx3);flex:0 0 auto;}
-.redo{width:100%;padding:13px;border-radius:14px;background:#fff5f5;border:1px solid #f8d7d7;color:#d9534f;
+.redo{width:100%;padding:13px;border-radius:14px;background:var(--danger-bg);border:1px solid var(--danger-ln);color:var(--danger);
   font-weight:700;font-size:14px;margin-top:12px;transition:.15s;}
 .redo:active{transform:scale(.98);}
 .resbtns{display:flex;gap:10px;margin-top:2px;}
 .resbtns button{flex:1;padding:15px;border-radius:15px;font-size:14.5px;font-weight:700;transition:.15s;}
 .resbtns .p1{background:linear-gradient(135deg,var(--brand),var(--brand3));color:#fff;box-shadow:0 10px 22px -12px rgba(91,75,255,.9);}
-.resbtns .p2{background:#fff;border:1px solid var(--line);color:var(--tx2);}
+.resbtns .p2{background:var(--card);border:1px solid var(--line);color:var(--tx2);}
 .resbtns button:active{transform:scale(.97);}
 
 /* ================= 速查表 ================= */
 .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 9px;}
 .tgrid.c3{grid-template-columns:repeat(3,1fr);gap:6px;}
-.tcell{display:flex;justify-content:space-between;align-items:baseline;gap:5px;padding:6px 8px;background:#f7f8fd;border-radius:9px;min-width:0;}
+.tcell{display:flex;justify-content:space-between;align-items:baseline;gap:5px;padding:6px 8px;background:var(--fill);border-radius:9px;min-width:0;}
 .tk{font-size:11.5px;color:var(--tx2);font-weight:600;white-space:nowrap;}
 .tv{font-size:12.5px;font-weight:700;color:var(--tx);letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tnote{font-size:11.5px;color:var(--tx3);line-height:1.6;margin-bottom:12px;}
 /* 公式卡（速查表 · 公式页） */
 .fml{display:flex;flex-direction:column;gap:9px;}
-.fmlrow{background:#f7f8fd;border:1px solid #eaeef8;border-radius:13px;padding:11px 13px;}
+.fmlrow{background:var(--fill);border:1px solid var(--line);border-radius:13px;padding:11px 13px;}
 .fmlrow .t{font-size:13.5px;font-weight:800;color:var(--brand);letter-spacing:.3px;}
 .fmlrow .f{font-size:13px;color:var(--tx);margin-top:6px;line-height:1.55;}
-.fmlrow .f b{color:#0a8f5a;font-weight:800;}
+.fmlrow .f b{color:var(--ok-tx);font-weight:800;}
 .fmlrow .e{font-size:12px;color:var(--tx3);margin-top:6px;line-height:1.5;}
 .fmlrow .e b{color:var(--tx2);font-weight:700;}
-.fmlrow.warn{background:#fff8ec;border-color:#f6e3bf;}
-.fmlrow.warn .t{color:#b7791f;}
-.fmlrow.warn .f{color:#8a6420;}
-.fmlrow.warn .f b{color:#8a6420;}
+.fmlrow.warn{background:var(--amb-bg);border-color:var(--amb-ln);}
+.fmlrow.warn .t{color:var(--amber);}
+.fmlrow.warn .f{color:var(--amb-tx);}
+.fmlrow.warn .f b{color:var(--amb-tx);}
 
 /* 矮屏手机（如 667px 的 iPhone SE）：把顶栏 / 键盘 / 材料卡一起压一压，
    给"错题口算路径"腾出空间。不压的话反馈层会被 overflow:hidden 裁掉。 */
@@ -286,6 +320,7 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
   <section class="screen on" id="s-home">
     <div class="hero">
       <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+      <button class="thmbtn" id="btnTheme" title="点击切换：亮色 / 暗色 / 跟随系统">☀ 亮色</button>
       <h1>资料分析速算</h1>
       <div class="tag">本地离线 · 数据只存本机 · 无广告无账号</div>
       <div class="hstats">
@@ -433,12 +468,44 @@ function db(){
   if(c !== 'inf' && c !== 't60' && c !== 't120' && typeof c !== 'number') MEM.count = 10;
   if(typeof MEM.sound !== 'boolean') MEM.sound = true;
   if(typeof MEM.tol !== 'number') MEM.tol = 3;
+  /* 主题：首次运行跟随系统，之后按用户选择 */
+  if(MEM.theme !== 'dark' && MEM.theme !== 'light') MEM.theme = sysDark() ? 'dark' : 'light';
   return MEM;
 }
 function saveDB(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(db())); }catch(e){}
 }
 function tolFrac(){ return db().tol / 100; }
+
+/* ============================================================
+   1.5 主题（亮 / 暗）
+   只在 <html> 上打 data-theme，颜色全走 CSS 变量；
+   内联 SVG 无法用 var()，所以另给一份 tc() 配色表。
+   ============================================================ */
+function sysDark(){
+  try{ return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+  catch(e){ return false; }
+}
+var THEME_META = document.querySelector('meta[name="theme-color"]');
+function applyTheme(){
+  var dark = (db().theme === 'dark');
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  if(THEME_META) THEME_META.setAttribute('content', dark ? '#161a24' : '#5b4bff');
+  var b = document.getElementById('btnTheme');
+  if(b) b.textContent = dark ? '☀ 亮色' : '🌙 暗色';
+}
+function toggleTheme(){
+  db().theme = (db().theme === 'dark') ? 'light' : 'dark';
+  saveDB(); applyTheme();
+}
+/* 内联 SVG 用色（结果页折线图 / 正确率圆环） */
+function tc(){
+  return (db().theme === 'dark')
+    ? { grid:'#262b39', lbl:'#737b91', dot:'#161a24', brand:'#8b7cff', brand3:'#c084fc',
+        okDot:'#34d399', badDot:'#f87171', okTx:'#5eead4', badTx:'#fca5a5', amber:'#fbbf24', track:'#222836' }
+    : { grid:'#eef0f8', lbl:'#939ab0', dot:'#ffffff', brand:'#5b4bff', brand3:'#a855f7',
+        okDot:'#0fae6e', badDot:'#ef4444', okTx:'#0a8f5a', badTx:'#cf3b3b', amber:'#f59e0b', track:'#eef0f8' };
+}
 
 /* ============================================================
    2. 题型定义
@@ -460,13 +527,6 @@ var MODULES = [
       {key:'rng',label:'分母范围',def:'mid',items:[
         {v:'mid',t:'1.5 ~ 20'},{v:'all',t:'表全量 40 项'},{v:'half',t:'1.5 ~ 20.5'},{v:'int',t:'1 ~ 20'}]}
     ]},
-  { id:'flash', name:'百化分闪卡', desc:'看题 → 回忆 → 揭晓', glyph:'⚡', hue:'#d946ef', tol:false,
-    opts:[
-      {key:'mode',label:'卡片方向',def:'fwd',items:[
-        {v:'fwd',t:'1/n → 小数'},{v:'rev',t:'小数 → 1/n'},{v:'mix',t:'混合'}]},
-      {key:'rng',label:'分母范围',def:'mid',items:[
-        {v:'mid',t:'1.5 ~ 20'},{v:'all',t:'表全量 40 项'},{v:'half',t:'1.5 ~ 20.5'},{v:'int',t:'1 ~ 20'}]}
-    ]},
   { id:'sq', name:'平方数', desc:'如 23² = 529', glyph:'x²', hue:'#0fae6e',
     opts:[{key:'rng',label:'底数范围',def:'11-30',items:[
       {v:'11-20',t:'11 ~ 20'},{v:'11-30',t:'11 ~ 30'},{v:'1-30',t:'1 ~ 30（表全量）'}]}] },
@@ -482,22 +542,53 @@ var MODULES = [
       {key:'size',label:'数值量级',def:'3',items:[
         {v:'3',t:'三位数'},{v:'4',t:'四位数'}]}
     ]},
+  /* 闪卡：卡片内容三选一，第二组选项随内容变化（dyn） */
+  { id:'flash', name:'闪卡', desc:'百化分 / 平方 / 立方', glyph:'⚡', hue:'#d946ef', tol:false,
+    opts:[
+      {key:'kind',label:'卡片内容',def:'bai',items:[
+        {v:'bai',t:'百化分闪卡'},{v:'sq',t:'平方数闪卡'},{v:'cube',t:'立方数闪卡'}]}
+    ],
+    dyn:function(o){
+      var dir = {key:'mode',label:'卡片方向',def:'fwd',items: (o.kind === 'bai')
+        ? [{v:'fwd',t:'1/n → 小数'},{v:'rev',t:'小数 → 1/n'},{v:'mix',t:'混合'}]
+        : [{v:'fwd',t:'n 的幂 → 值'},{v:'rev',t:'值 → n 是几次幂'},{v:'mix',t:'混合'}]};
+      var rng = (o.kind === 'bai')
+        ? {key:'brng',label:'分母范围',def:'mid',items:[
+            {v:'mid',t:'1.5 ~ 20'},{v:'all',t:'表全量 40 项'},{v:'half',t:'1.5 ~ 20.5'},{v:'int',t:'1 ~ 20'}]}
+        : (o.kind === 'sq')
+          ? {key:'nrng',label:'底数范围',def:'11-30',items:[
+              {v:'11-20',t:'11 ~ 20'},{v:'11-30',t:'11 ~ 30'},{v:'1-30',t:'1 ~ 30（表全量）'}]}
+          : {key:'nrng',label:'底数范围',def:'2-15',items:[
+              {v:'2-10',t:'2 ~ 10'},{v:'2-15',t:'2 ~ 15'},{v:'2-20',t:'2 ~ 20'},{v:'1-30',t:'1 ~ 30（表全量）'}]};
+      return [dir, rng];
+    }},
   { id:'mixed', name:'综合练习', desc:'七种题型随机混合', glyph:'∑', hue:'#8b5cf6', tol:true, opts:[] }
 ];
 function getMod(id){
   for(var i=0;i<MODULES.length;i++){ if(MODULES[i].id===id) return MODULES[i]; }
   return null;
 }
+/* 选项组 = 静态 opts + 随选项变化的 dyn(o) */
+function groupsFor(mod, o){
+  return mod.dyn ? (mod.opts||[]).concat(mod.dyn(o)) : (mod.opts||[]);
+}
 function defaultOpts(mod){
   var o = {};
   (mod.opts||[]).forEach(function(g){ o[g.key] = g.def; });
+  if(mod.dyn) mod.dyn(o).forEach(function(g){ o[g.key] = g.def; });
   return o;
 }
 function currentOpts(mod){
   var saved = db().opts[mod.id] || {};
-  var o = defaultOpts(mod);
-  (mod.opts||[]).forEach(function(g){ if(saved[g.key]!=null) o[g.key] = saved[g.key]; });
+  var o = {};
+  (mod.opts||[]).forEach(function(g){ o[g.key] = (saved[g.key] != null) ? saved[g.key] : g.def; });
+  if(mod.dyn){
+    mod.dyn(o).forEach(function(g){ o[g.key] = (saved[g.key] != null) ? saved[g.key] : g.def; });
+  }
   return o;
+}
+function flashName(kind){
+  return kind === 'sq' ? '平方数闪卡' : (kind === 'cube' ? '立方数闪卡' : '百化分闪卡');
 }
 function persistOpt(mod, key, val){
   if(!db().opts[mod.id]) db().opts[mod.id] = {};
@@ -546,6 +637,43 @@ function genPow(kind, opt){
     ansVal: v,
     ansText: String(v),
     check: function(u){ return Math.abs(u - v) < 1e-6; }
+  };
+}
+
+/* ---- 3.2b 闪卡用的平方 / 立方：正面 nᵏ 或值，背面写完整等式 ---- */
+function genPowFlash(kind, opt){
+  var p = String(opt.rng).split('-');
+  var lo = parseInt(p[0],10), hi = parseInt(p[1],10);
+  if(isNaN(lo) || isNaN(hi)){ lo = (kind === 'sq' ? 11 : 2); hi = (kind === 'sq' ? 30 : 15); }
+  var n = rnd(lo, hi);
+  var pw = kind === 'sq' ? 2 : 3;
+  var v = Math.pow(n, pw);
+  var sup = pw === 2 ? '²' : '³';
+  var dir = opt.mode === 'mix' ? (Math.random()<0.5 ? 'fwd' : 'rev') : opt.mode;
+  if(dir === 'fwd'){
+    return {
+      key:'FF'+(kind==='sq'?'S':'C')+n,
+      plain: n + sup + ' =',
+      tag: kind==='sq' ? '平方' : '立方',
+      tol:false,
+      html:'<span>'+n+'</span><sup>'+pw+'</sup><span class="eq">=</span>',
+      ansVal: v,
+      ansText: String(v),
+      back: String(v),
+      check: function(u){ return Math.abs(u - v) < 1e-6; }
+    };
+  }
+  return {
+    key:'FR'+(kind==='sq'?'S':'C')+n,
+    plain: v + ' = ?' + sup,
+    tag: kind==='sq' ? '平方' : '立方',
+    tol:false,
+    html:'<span>'+v+'</span><span class="eq">=</span><span>?</span><sup>'+pw+'</sup>',
+    hint: '谁的' + (pw === 2 ? '平方' : '立方'),
+    ansVal: n,
+    ansText: String(n),
+    back: n + sup + ' = ' + v,
+    check: function(u){ return Math.abs(u - n) < 1e-6; }
   };
 }
 
@@ -790,7 +918,9 @@ function genOnce(modId, opt){
     case 'div33': return genDiv('33');
     case 'lead':  return genLead(opt);
     case 'bai':   return genBai(opt);
-    case 'flash': return genBai(opt);
+    case 'flash': return (opt.kind === 'bai')
+      ? genBai({mode:opt.mode, rng:opt.brng})
+      : genPowFlash(opt.kind, {mode:opt.mode, rng:opt.nrng});
     case 'sq':    return genPow('sq', opt);
     case 'cube':  return genPow('cube', opt);
     case 'two':   return genTwo(opt);
@@ -941,7 +1071,7 @@ function openSetup(modId){
             '大约相当于把结果算到 2 位有效数字。平方 / 立方按精确判分。</div></div>';
   }
 
-  (mod.opts||[]).forEach(function(g){
+  groupsFor(mod, opt).forEach(function(g){
     html += '<div class="card"><div class="lb"><i></i>'+g.label+'</div><div class="seg" data-key="'+g.key+'">';
     g.items.forEach(function(it){
       html += '<button data-v="'+it.v+'" class="'+(String(opt[g.key])===String(it.v)?'on':'')+'">'+it.t+'</button>';
@@ -970,8 +1100,14 @@ function openSetup(modId){
   if(modId === 'flash'){
     html += '<div class="card" style="padding:13px 15px"><div class="setdesc" style="margin:0">' +
       '不用输入。看到题先自己回忆，点「揭晓答案」核对，再诚实地点「记住了 / 没记住」。' +
-      '系统只统计<b>回忆用时</b>（从出题到点揭晓），不含看答案的时间。' +
-      '一轮把表过完（分母范围选「表全量 40 项」+ 练习量 40 题）效果最好。</div></div>';
+      '系统只统计<b>回忆用时</b>（从出题到点揭晓），不含看答案的时间。';
+    if(opt.kind === 'bai'){
+      html += '百化分可以按「1/n → 小数」或反过来刷；一轮把表过完（分母范围选「表全量 40 项」+ 练习量 40 题）效果最好。';
+    } else {
+      html += (opt.kind === 'sq' ? '平方' : '立方') + '默认「n 的幂 → 值」；' +
+        '切到「值 → n 是几次幂」就是反着认（看到 529 要反应出 23²），这个方向更贴近真题里认数的场景。';
+    }
+    html += '</div></div>';
   }
   if(modId === 'mixed'){
     html += '<div class="card" style="padding:13px 15px"><div class="setdesc" style="margin:0">' +
@@ -1017,7 +1153,10 @@ function openSetup(modId){
       var b = e.target.closest('button'); if(!b) return;
       Array.prototype.forEach.call(this.children, function(x){ x.classList.remove('on'); });
       b.classList.add('on');
-      persistOpt(mod, seg.getAttribute('data-key'), b.getAttribute('data-v'));
+      var key = seg.getAttribute('data-key');
+      persistOpt(mod, key, b.getAttribute('data-v'));
+      /* 闪卡换了「卡片内容」，后面的选项组不一样了 —— 整页重画 */
+      if(mod.dyn && key === 'kind') openSetup(modId);
     });
   });
   $('#btnStart').addEventListener('click', function(){ startPractice(modId); });
@@ -1308,6 +1447,7 @@ function finish(){
   var rec = {
     id: Date.now(),
     mod: S.mod,
+    kind: (S.mod === 'flash') ? S.opt.kind : null,
     mode: S.timeLimit ? 'timed' : (S.endless ? 'endless' : 'fixed'),
     n: ans.length,
     ok: okN,
@@ -1346,6 +1486,7 @@ function stepDec(step){
 }
 function buildChart(list){
   if(!list.length) return '<div class="empty">还没有记录，做完一次就会出现趋势图</div>';
+  var c = tc();                                  // 内联 SVG 拿不到 CSS 变量，用配色表
   var vals = list.map(function(s){ return s.avg/1000; });
   var n = vals.length;
   var W = 560, H = 220, PL = 54, PR = 22, PT = 26, PB = 42;
@@ -1371,17 +1512,17 @@ function buildChart(list){
   var s = '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
   s += '<defs>' +
        '<linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">' +
-       '<stop offset="0%" stop-color="#5b4bff" stop-opacity="0.26"/>' +
-       '<stop offset="100%" stop-color="#5b4bff" stop-opacity="0.01"/></linearGradient>' +
+       '<stop offset="0%" stop-color="'+c.brand+'" stop-opacity="0.26"/>' +
+       '<stop offset="100%" stop-color="'+c.brand+'" stop-opacity="0.01"/></linearGradient>' +
        '<linearGradient id="lg" x1="0" y1="0" x2="1" y2="0">' +
-       '<stop offset="0%" stop-color="#5b4bff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>' +
+       '<stop offset="0%" stop-color="'+c.brand+'"/><stop offset="100%" stop-color="'+c.brand3+'"/></linearGradient>' +
        '</defs>';
 
   for(var g=0; g<=4; g++){
     var gv = bottom + step*g;
     var y = Y(gv);
-    s += '<line x1="'+PL+'" y1="'+y.toFixed(1)+'" x2="'+(PL+iw)+'" y2="'+y.toFixed(1)+'" stroke="#eef0f8" stroke-width="1"/>';
-    s += '<text x="'+(PL-9)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="#939ab0">'+gv.toFixed(dprec)+'s</text>';
+    s += '<line x1="'+PL+'" y1="'+y.toFixed(1)+'" x2="'+(PL+iw)+'" y2="'+y.toFixed(1)+'" stroke="'+c.grid+'" stroke-width="1"/>';
+    s += '<text x="'+(PL-9)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="'+c.lbl+'">'+gv.toFixed(dprec)+'s</text>';
   }
 
   var pts = vals.map(function(v,i){ return [X(i), Y(v)]; });
@@ -1390,13 +1531,13 @@ function buildChart(list){
     s += '<path d="'+line+' L '+X(n-1).toFixed(1)+' '+(PT+ih)+' L '+X(0).toFixed(1)+' '+(PT+ih)+' Z" fill="url(#ag)"/>';
   }
   var ya = Y(avg);
-  s += '<line x1="'+PL+'" y1="'+ya.toFixed(1)+'" x2="'+(PL+iw)+'" y2="'+ya.toFixed(1)+'" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.75"/>';
+  s += '<line x1="'+PL+'" y1="'+ya.toFixed(1)+'" x2="'+(PL+iw)+'" y2="'+ya.toFixed(1)+'" stroke="'+c.amber+'" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.75"/>';
   if(n > 1) s += '<path d="'+line+'" fill="none" stroke="url(#lg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
 
   var minIdx = vals.indexOf(minV), maxIdx = vals.indexOf(maxV);
   pts.forEach(function(p,i){
     var isMin = (i === minIdx), isMax = (i === maxIdx && n > 1 && maxIdx !== minIdx);
-    s += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(isMin?5.4:3.8)+'" fill="#fff" stroke="'+(isMin?'#0fae6e':(isMax?'#ef4444':'#5b4bff'))+'" stroke-width="2.4"/>';
+    s += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(isMin?5.4:3.8)+'" fill="'+c.dot+'" stroke="'+(isMin?c.okDot:(isMax?c.badDot:c.brand))+'" stroke-width="2.4"/>';
   });
   var labelIdx = {};
   labelIdx[n-1] = 1;
@@ -1404,7 +1545,7 @@ function buildChart(list){
   if(n > 3) labelIdx[maxIdx] = 1;
   Object.keys(labelIdx).forEach(function(k){
     var i = parseInt(k,10), p = pts[i];
-    var col = (i===minIdx) ? '#0a8f5a' : (i===maxIdx ? '#cf3b3b' : '#5b4bff');
+    var col = (i===minIdx) ? c.okTx : (i===maxIdx ? c.badTx : c.brand);
     var ty = p[1] - 11; if(ty < PT+11) ty = p[1] + 18;
     var anchor = 'middle', tx = p[0];
     if(n > 1 && i === 0){ anchor = 'start'; tx = p[0] - 6; }
@@ -1417,11 +1558,11 @@ function buildChart(list){
     if(i2 === n-1) continue;
     if((n-1) - i2 < xstep*0.75) continue;
     var dt = new Date(list[i2].ts);
-    s += '<text x="'+X(i2).toFixed(1)+'" y="'+(PT+ih+20)+'" text-anchor="middle" font-size="10.5" fill="#939ab0">'+(dt.getMonth()+1)+'/'+dt.getDate()+'</text>';
+    s += '<text x="'+X(i2).toFixed(1)+'" y="'+(PT+ih+20)+'" text-anchor="middle" font-size="10.5" fill="'+c.lbl+'">'+(dt.getMonth()+1)+'/'+dt.getDate()+'</text>';
   }
   if(n > 1){
     var dt2 = new Date(list[n-1].ts);
-    s += '<text x="'+X(n-1).toFixed(1)+'" y="'+(PT+ih+20)+'" text-anchor="middle" font-size="10.5" fill="#939ab0">'+(dt2.getMonth()+1)+'/'+dt2.getDate()+'</text>';
+    s += '<text x="'+X(n-1).toFixed(1)+'" y="'+(PT+ih+20)+'" text-anchor="middle" font-size="10.5" fill="'+c.lbl+'">'+(dt2.getMonth()+1)+'/'+dt2.getDate()+'</text>';
   }
   s += '</svg>';
   return s;
@@ -1431,6 +1572,7 @@ function buildChart(list){
    10. 结果页
    ============================================================ */
 function renderResult(rec){
+  var c = tc();
   var mod = getMod(rec.mod);
   var acc = rec.ok / rec.n;
   var avgMs = rec.avg;
@@ -1441,14 +1583,16 @@ function renderResult(rec){
   var L = isFlash ? {
         acc:'记住率', okN:'记住 / 总数', per:'平均每张', trend:'平均每张回忆用时趋势',
         wrong:'没记住的卡片', unit:'张', empty:'全部记住了，没有遗漏',
-        emptyHint:'换个方向（1/n → 小数 ↔ 小数 → 1/n）再来一轮'
+        emptyHint: (rec.kind === 'bai' || !rec.kind)
+          ? '换个方向（1/n → 小数 ↔ 小数 → 1/n）再来一轮'
+          : '默认刷的是「n 的幂 → 值」，可以切到反向（值 → n 是几次幂）再过一轮'
       } : {
         acc:'正确率', okN:'答对 / 总题数', per:'平均每题', trend:'平均每题用时趋势',
         wrong:'错题回顾', unit:'题', empty:'全部答对，没有错题',
         emptyHint:'可以试试限时挑战，或者把误差收紧到 1%'
       };
 
-  $('#resTitle').textContent = mod.name + ' · 结果';
+  $('#resTitle').textContent = (isFlash ? flashName(rec.kind) : mod.name) + ' · 结果';
 
   var times = S.answers.map(function(a){ return a.ms; });
   var fast = Math.min.apply(null, times);
@@ -1461,11 +1605,11 @@ function renderResult(rec){
   html += '  <div class="rtop">';
   html += '    <div class="ringwrap">';
   html += '      <svg viewBox="0 0 120 120" width="112" height="112">';
-  html += '        <circle cx="60" cy="60" r="52" fill="none" stroke="#eef0f8" stroke-width="12"/>';
+  html += '        <circle cx="60" cy="60" r="52" fill="none" stroke="'+c.track+'" stroke-width="12"/>';
   html += '        <circle cx="60" cy="60" r="52" fill="none" stroke="url(#rg)" stroke-width="12" stroke-linecap="round"';
   html += '          stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+(circ*(1-acc)).toFixed(1)+'"/>';
   html += '        <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">';
-  html += '          <stop offset="0%" stop-color="#5b4bff"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>';
+  html += '          <stop offset="0%" stop-color="'+c.brand+'"/><stop offset="100%" stop-color="'+c.brand3+'"/></linearGradient></defs>';
   html += '      </svg>';
   html += '      <div class="ringtxt"><b>'+Math.round(acc*100)+'%</b><span>'+L.acc+'</span></div>';
   html += '    </div>';
@@ -1534,7 +1678,7 @@ function renderResult(rec){
     html += '<div class="rcard" style="text-align:center;padding:22px">' +
             '<div style="font-size:32px">🎉</div>' +
             '<div style="font-size:14px;font-weight:700;margin-top:8px">' + L.empty + '</div>' +
-            '<div style="font-size:12px;color:#939ab0;margin-top:5px">' + L.emptyHint + '</div>' +
+            '<div style="font-size:12px;color:var(--tx3);margin-top:5px">' + L.emptyHint + '</div>' +
             '</div>';
   }
 
@@ -1548,8 +1692,8 @@ function renderResult(rec){
     var tag = (i === 0) ? '<span class="pill eq" style="margin-left:6px">本次</span>' : '';
     html += '<div class="wrongitem">' +
             '<div class="qq">' + (dt.getMonth()+1) + '/' + dt.getDate() + ' ' + pad2(dt.getHours()) + ':' + pad2(dt.getMinutes()) +
-              (modeTxt ? ' <span style="color:#939ab0;font-weight:400;font-size:11px">'+modeTxt+'</span>' : '') + tag + '</div>' +
-            '<div style="color:#5b6276;font-size:12.5px">' + s.n + ' ' + L.unit + '</div>' +
+              (modeTxt ? ' <span style="color:var(--tx3);font-weight:400;font-size:11px">'+modeTxt+'</span>' : '') + tag + '</div>' +
+            '<div style="color:var(--tx2);font-size:12.5px">' + s.n + ' ' + L.unit + '</div>' +
             '<div class="aa">' + Math.round(s.ok/s.n*100) + '%</div>' +
             '<div class="tt">' + fmtSec(s.avg,2) + 's/' + L.unit + '</div>' +
             '</div>';
@@ -1660,6 +1804,7 @@ $('#tblTabs').addEventListener('click', function(e){
   renderTable(b.getAttribute('data-v'));
 });
 
+$('#btnTheme').addEventListener('click', toggleTheme);
 $('#btnSound').addEventListener('click', function(){
   db().sound = !db().sound; saveDB();
   this.textContent = (db().sound ? '🔊' : '🔇') + ' 声音反馈';
@@ -1705,6 +1850,7 @@ document.addEventListener('keydown', function(e){
 document.addEventListener('dblclick', function(e){ e.preventDefault(); }, {passive:false});
 
 /* 启动 */
+applyTheme();
 renderHome();
 })();
 </script>
